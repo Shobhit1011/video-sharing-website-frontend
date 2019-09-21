@@ -1,0 +1,26 @@
+<html>
+    <body>
+        <app-header></app-header>
+        <div>
+            <div *ngIf="innerWidth > 600"class="padding-t-70">
+                <div fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="flex-start" class ="margin-l-8">
+                    <div *ngFor = "let video of videos">
+                        <a class="item-content" [routerLink]="['/video',video.id]">
+                            <mat-card fxFlex="0 1 calc(33.3% - 16px)" id="video-image" class="margin-top-5">
+                                <img mat-card-image [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" class="card-image-container">
+                                    <mat-card-content class="white-space-nowrap">
+                                        <p class="break-word">{{ (video.name_in_folder.length > 20) ? (video.name_in_folder | slice:0:20) + '...' : video.name_in_folder }}</p>
+                                    </mat-card-content>
+                            </mat-card>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="innerWidth <= 600" class="padding-t-70">
+                <app-video-listing></app-video-listing>
+            </div>
+        </div>
+    </body> 
+</html>
+
+

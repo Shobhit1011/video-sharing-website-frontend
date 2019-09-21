@@ -1,0 +1,27 @@
+<div class="fixed-bar">
+        <span class="float-left">
+            <b>VIDEO SHARING WEBSITE</b>
+                <div *ngIf="loggedIn && userInfo">
+                <span class="float-left button-style">
+                    <b>Account:&nbsp;{{userInfo.email}}</b>
+                </span>
+                </div>
+            <div *ngIf="!loggedIn">
+                <span class="float-left button-style">
+                    <b>Not&nbsp;Logged&nbsp;In</b>
+                </span>
+            </div>
+        </span>
+        <span>
+            <button mat-button class="float-right" (click)="uploadFile()">
+                <mat-icon>file_upload</mat-icon>
+            </button>
+        </span>
+        <span>
+            <div *ngIf="!loggedIn">
+                <button mat-raised-button class="button-color float-right button-style" (click)="navigate()">
+                    <span class="text-color">Login</span>
+                </button>
+            </div>
+        </span>
+    </div>

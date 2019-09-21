@@ -1,0 +1,29 @@
+.login-card {
+    max-width: 400px;
+}
+
+.main-div{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-dimensions{
+    height: 50%;
+    width: 50%;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.color{
+    background-color: rgb(16,108,200);
+    color: white
+}
+
+.text-docoration{
+    text-decoration: none;
+    color: black
+}

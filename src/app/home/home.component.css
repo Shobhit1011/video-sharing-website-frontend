@@ -1,0 +1,48 @@
+.fixed-bar{
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    z-index: 4;
+    background-color: #C0C0C0;
+}
+.button-color{
+    background-color: black;
+}
+.text-color{
+    color: white
+}
+.float-left{
+    float: left;
+}
+.float-right{
+    float: right;
+}
+.button-style{
+    width: 8%;
+    margin-right: 2%;
+    margin-top: 0.25%;
+}
+.card-image-container{
+    height: 106px;
+    width: 189px;
+    overflow:hidden;
+}
+.break-word{
+    word-break: break-word;
+}
+.item-content {
+    text-decoration: none !important;
+}
+.margin-l-8{
+    margin-left:8%;
+}
+.padding-t-70{
+    padding-top: 70px;
+}
+
+.margin-top-5{
+    margin-top: 5px;
+}
+.white-space-nowrap{
+    white-space: nowrap;
+}

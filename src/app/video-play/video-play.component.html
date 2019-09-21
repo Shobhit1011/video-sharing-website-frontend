@@ -1,0 +1,32 @@
+<html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <app-header (uploadButtonClicked)="stop()" (dialogClosed)="play()"></app-header>
+    <div class="video-playing-container margin-left-10" id="container-display">
+      <div id="videoWidth" class="video-container">
+        <video class="video-container" controls controlsList="nodownload">
+              <source *ngIf="url" [src]="url">
+        </video>
+        <div class="video-name-container">
+          <div style="float: left">
+            <h6>Now Playing&nbsp;&nbsp;{{videoName}}</h6>
+          </div>  
+          <div style="float: right">
+            <h6>Uploaded By&nbsp;&nbsp;{{uploader}}</h6>
+          </div>
+        </div>
+         <div class="star-container">
+           <span *ngIf="showRatingsDiv">
+              <app-rating [rating]="ratingValue" (ratingClick)="rating($event)"></app-rating>
+           </span>
+          </div> 
+        
+      </div>
+      <div id="listing" class="listing-style">
+          <app-video-listing></app-video-listing>
+      </div>
+    </div>
+  </body>
+</html>

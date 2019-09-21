@@ -1,0 +1,46 @@
+<html>
+    <body>
+        <form [formGroup] = "formGroup">
+            <div>
+                <mat-form-field>
+                    <input matInput [formControl]="EmailInput" name="email" placeholder="Enter your email">
+                    <mat-error *ngIf="EmailInput.touched && EmailInput.errors && EmailInput.errors.required">
+                        Email is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [formControl]="PasswordInput" name="password" placeholder="Enter your password">
+                    <mat-error *ngIf="PasswordInput.touched && PasswordInput.errors && PasswordInput.errors.required">
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [formControl]="FirstNameInput" name="firstName" placeholder="Enter your FirstName">
+                    <mat-error *ngIf="FirstNameInput.touched && FirstNameInput.errors && FirstNameInput.errors.required">
+                        FirstName is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [formControl]="LastNameInput" name="lastName" placeholder="Enter your LastName">
+                    <mat-error *ngIf="LastNameInput.touched && LastNameInput.errors && LastNameInput.errors.required">
+                        LastName is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [formControl]="PhoneNoInput" name="phone_no" placeholder="Enter your phone_no">
+                    <mat-error *ngIf="PhoneNoInput.touched && PhoneNoInput.errors && PhoneNoInput.errors.required">
+                        PhoneNo is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </body>
+</html>

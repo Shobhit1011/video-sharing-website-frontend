@@ -1,0 +1,46 @@
+.video-container{
+    height: 70%;
+    width: 100%;
+}
+.margin-left-10{
+    margin-left: 10px;
+}
+.fixed-bar{
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    z-index: 4;
+    background-color: #C0C0C0;
+}
+.video-playing-container{
+    display: flex;
+    padding-top: 80px;
+    margin-right: 10px;
+}
+.video-name-container{
+    background-color: #C0C0C0;
+    height: 50px;
+}
+.star-container{
+    height: 40px;
+}
+.listing-style{
+    z-index: 1;
+}
+.button-color{
+    background-color: black;
+}
+.text-color{
+    color: white
+}
+.float-left{
+    float: left;
+}
+.float-right{
+    float: right;
+}
+.button-style{
+    width: 8%;
+    margin-right: 2%;
+    margin-top: 0.25%;
+}

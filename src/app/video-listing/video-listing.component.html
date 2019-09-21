@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <div *ngFor = "let video of videos;let i = index">
+            <a class="item-content" [routerLink]="['/video',video.id]">
+                <mat-card class="card-container">
+                    <img mat-card-image [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" class="card-image-container">
+                    <mat-card-content class="content-container">
+                        <p class="break-word">{{video.name_in_folder}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </a>
+        </div>
+    </body>
+</html>
+

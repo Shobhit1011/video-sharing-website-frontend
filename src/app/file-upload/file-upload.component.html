@@ -1,0 +1,25 @@
+<html>
+    <body>
+        <h6 mat-dialog-title>File Upload</h6>
+        <form [formGroup]="form" (ngSubmit)="submitForm()">
+            <div>
+                <mat-form-field>
+                    <input matInput name="filename" [formControl]="FileNameInput" id="name" placeholder="filename"/>
+                    <mat-error *ngIf="FileNameInput.errors && FileNameInput.errors.required && FileNameInput.touched"> Filename is required</mat-error>
+                </mat-form-field>
+            </div>
+            <label for="file"><b>Choose the file to upload</b></label><br>
+            <input #fileInput type="file" (change)="uploadFile(fileInput.files)" [formControl]="FileInput" name="file" id="file"/><br><br>
+            <mat-error *ngIf="FileInput.errors && FileInput.errors.required && FileInput.touched && FileInput.dirty"> File is required</mat-error>
+            
+            <textarea [formControl]="descriptionInput" rows="2" column="10" name="description" placeholder="Enter description"></textarea>
+            <br>
+            <button mat-raised-button class="button-color" [disabled]="!form.valid">
+                <span class="text-color">Upload</span>
+            </button>
+            <button mat-raised-button class="button-color l-m-15" type="button" (click)="onNoClick()">
+                <span class="text-color">Cancel</span>
+            </button>
+        </form> 
+    </body>
+</html>
