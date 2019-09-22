@@ -1,46 +1,78 @@
 <html>
     <body>
-        <form [formGroup] = "formGroup">
-            <div>
-                <mat-form-field>
-                    <input matInput [formControl]="EmailInput" name="email" placeholder="Enter your email">
-                    <mat-error *ngIf="EmailInput.touched && EmailInput.errors && EmailInput.errors.required">
-                        Email is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [formControl]="PasswordInput" name="password" placeholder="Enter your password">
-                    <mat-error *ngIf="PasswordInput.touched && PasswordInput.errors && PasswordInput.errors.required">
-                        Password is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [formControl]="FirstNameInput" name="firstName" placeholder="Enter your FirstName">
-                    <mat-error *ngIf="FirstNameInput.touched && FirstNameInput.errors && FirstNameInput.errors.required">
-                        FirstName is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [formControl]="LastNameInput" name="lastName" placeholder="Enter your LastName">
-                    <mat-error *ngIf="LastNameInput.touched && LastNameInput.errors && LastNameInput.errors.required">
-                        LastName is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [formControl]="PhoneNoInput" name="phone_no" placeholder="Enter your phone_no">
-                    <mat-error *ngIf="PhoneNoInput.touched && PhoneNoInput.errors && PhoneNoInput.errors.required">
-                        PhoneNo is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </form>
+        <div style="text-align: center">
+            <h1>Sign up</h1><br>
+        </div>
+        <div class = "main-div">
+            <mat-card class="card-dimensions">
+                <mat-card-content>
+                    <form [formGroup] = "formGroup">
+                        <div>
+                            <mat-form-field>
+                                <input matInput [formControl]="EmailInput" name="email" placeholder="Enter your email">
+                                <mat-error *ngIf="EmailInput.touched && EmailInput.errors && EmailInput.errors.required">
+                                    Email is required
+                                </mat-error>
+                                <mat-error *ngIf="EmailInput.touched && EmailInput.errors && !EmailInput.errors.required && EmailInput.errors.pattern">
+                                    Must be a valid email id
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput type="password" [formControl]="PasswordInput" name="password" placeholder="Enter your password">
+                                <mat-error *ngIf="PasswordInput.touched && PasswordInput.errors && PasswordInput.errors.required">
+                                    Password is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput type="password" [formControl]="confirmPasswordInput" name="confirmpassword" placeholder="Confirm password">
+                                <mat-error *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors && confirmPasswordInput.errors.required">
+                                    Confirm Password is required
+                                </mat-error>
+                                <mat-error *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors && !confirmPasswordInput.errors.required && confirmPasswordInput.errors.mustMatch">
+                                    Password and Confirm Password should be equal
+                                </mat-error>
+                            </mat-form-field>
+                            </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput [formControl]="FirstNameInput" name="firstName" placeholder="Enter your FirstName">
+                                <mat-error *ngIf="FirstNameInput.touched && FirstNameInput.errors && FirstNameInput.errors.required">
+                                    FirstName is required
+                                </mat-error>
+                                <mat-error *ngIf="FirstNameInput.touched && FirstNameInput.errors && !FirstNameInput.errors.required && FirstNameInput.errors.pattern">
+                                    FirstName cannot contain special characters and space and maximum length is 20
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput [formControl]="LastNameInput" name="lastName" placeholder="Enter your LastName">
+                                <mat-error *ngIf="LastNameInput.touched && LastNameInput.errors && LastNameInput.errors.required">
+                                    LastName is required
+                                </mat-error>
+                                <mat-error *ngIf="LastNameInput.touched && LastNameInput.errors && !LastNameInput.errors.required && LastNameInput.errors.pattern">
+                                    LastName cannot contain special characters and space and maximum length is 20
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput [formControl]="PhoneNoInput" name="phone_no" placeholder="Enter your phone_no">
+                                <mat-error *ngIf="PhoneNoInput.touched && PhoneNoInput.errors && PhoneNoInput.errors.required">
+                                    PhoneNo is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div style="text-align: center">
+                            <button class="color" mat-raised-button [disabled]="!formGroup.valid"> Signup</button>
+                        </div>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </body>
 </html>

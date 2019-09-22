@@ -1,0 +1,19 @@
+.main-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-dimensions{
+    height: 60%;
+    width: 50%;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.color{
+    background-color: rgb(16,108,200);
+    color: white
+}

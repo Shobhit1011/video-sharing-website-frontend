@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { MustMatch } from '../validators/confirmPassword.validator';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -9,15 +11,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class SignupComponent implements OnInit {
   formGroup: FormGroup;
   
-  constructor() { }
+  constructor(private formBuilder: FormBuilder) { }
   
   ngOnInit() {
-    this.formGroup = new FormGroup({
-      Email: new FormControl('', Validators.required),
+    this.formGroup = this.formBuilder.group({
+      Email: new FormControl('', [Validators.required, Validators.pattern(environment.emailRegex)]),
       Password: new FormControl('', Validators.required),
-      firstName: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      phone_no: new FormControl('', Validators.required)
+      firstName: new FormControl('', [Validators.required, Validators.pattern(environment.nameRegex)]),
+      lastName: new FormControl('', [Validators.required, Validators.pattern(environment.nameRegex)]),
+      phone_no: new FormControl('', Validators.required),
+      confirm_password: new FormControl('',Validators.required)
+    },{
+      validator: MustMatch('Password','confirm_password')
     });
   }
   
@@ -39,5 +44,9 @@ export class SignupComponent implements OnInit {
 
   get PhoneNoInput(){
     return this.formGroup.controls['phone_no'];
+  }
+
+  get confirmPasswordInput(){
+    return this.formGroup.controls['confirm_password'];
   }
 }
