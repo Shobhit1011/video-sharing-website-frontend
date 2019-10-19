@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MustMatch } from '../validators/confirmPassword.validator';
 import { environment } from 'src/environments/environment';
+import { SignupService } from './signup.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -11,7 +14,10 @@ import { environment } from 'src/environments/environment';
 export class SignupComponent implements OnInit {
   formGroup: FormGroup;
   
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+    private sigupService: SignupService,
+    private toastr: ToastrService,
+    private router: Router) { }
   
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
@@ -48,5 +54,19 @@ export class SignupComponent implements OnInit {
 
   get confirmPasswordInput(){
     return this.formGroup.controls['confirm_password'];
+  }
+
+  submit(){
+    this.sigupService.signup(this.formGroup.value).subscribe(()=>{
+      this.toastr.success("User Registered Successfully");
+      this.router.navigateByUrl("/auth/login");
+    },(error)=>{
+      if(error.error.statusCode === 'DUPLICATE_EMAIL'){
+        this.toastr.error("Email already registered with us");
+      }
+      else{
+        this.toastr.error("Something went wrong");
+      }
+    })
   }
 }

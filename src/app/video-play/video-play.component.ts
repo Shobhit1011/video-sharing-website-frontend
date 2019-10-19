@@ -182,21 +182,24 @@ export class VideoPlayComponent implements OnInit {
       bufferedBar.style.height = "4px";
     }
 
+    var timeout;
+
     function disableControls(){
       videoControls.style.display = "block";
-      setTimeout(()=>{
+      clearTimeout(timeout);
+      timeout = setTimeout(()=>{
         if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
           videoControls.style.display = "none"
         }
-      },10000);
+      },3000);
     }
 
     function inactivityTimer(){
       if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
         setTimeout(()=>{
           videoControls.style.display = "none"
-        },10000);
-        videoContainer.addEventListener('click', disableControls);
+        },3000);
+        videoContainer.addEventListener('mousemove', disableControls);
         videoNameContainer.style.display = "none";
       }
       else{
@@ -207,7 +210,7 @@ export class VideoPlayComponent implements OnInit {
 
     function enableControls(){
       videoControls.style.display = "block";
-      videoContainer.removeEventListener('click', disableControls)
+      videoContainer.removeEventListener('mousemove', disableControls)
     }
 
 
@@ -245,7 +248,8 @@ export class VideoPlayComponent implements OnInit {
 
 
     videoElement.addEventListener('ended', () => {
-      btnPlay.setAttribute('hidden', 'true');
+      btnPlayIcon.classList.remove('fa-pause');
+      btnPlayIcon.classList.add('fa-play');
       btnReset.removeAttribute('hidden');
     }, false);
 

@@ -85,7 +85,7 @@ video {
 #progress-bar-fill {
     width: 0;
     height: 4px;
-    background-color: #e74c3c;
+    background-color: red;
     transition: width .35s linear;
     position: absolute;
     z-index: 2;

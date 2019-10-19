@@ -28,3 +28,11 @@
 .mat-card-content{
     width: 100%
 }
+
+@supports (-ms-ime-align: auto) {
+    .card-image-container-edge{
+        height: 100px !important;
+        width: 180px !important;
+        overflow:hidden;
+    }
+  }
