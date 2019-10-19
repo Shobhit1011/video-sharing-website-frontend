@@ -1,29 +1,46 @@
 <html>
   <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="/assets/font-awesome-4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <app-header (uploadButtonClicked)="stop()" (dialogClosed)="play()"></app-header>
     <div class="video-playing-container margin-left-10" id="container-display">
-      <div id="videoWidth" class="video-container">
-        <video class="video-container" controls controlsList="nodownload">
-              <source *ngIf="url" [src]="url">
-        </video>
-        <div class="video-name-container">
-          <div style="float: left">
-            <h6>Now Playing&nbsp;&nbsp;{{videoName}}</h6>
-          </div>  
-          <div style="float: right">
-            <h6>Uploaded By&nbsp;&nbsp;{{uploader}}</h6>
+      <div id="videoWidth" class="video-container-1">
+          <video class="video-container" controlsList="nodownload">
+                <source *ngIf="url" [src]="url">
+          </video>
+          <div class="video-controls">
+              <div style="background-color: black;">
+                  <span id="buffered-amount"></span>
+                  <span id="progress-bar-fill"></span>
+                  <span id="default-bar"></span>
+              </div>
+              <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;">
+                <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
+                <button class="btn btn-pause"><span class="fa fa-pause"></span></button>
+                <button class="btn btn-forward"><span class="fa fa-forward"></span></button>
+                <button class="btn btn-stop"><span class="fa fa-stop"></span></button>
+                <button class="btn btn-reset" hidden><span class="fa fa-undo"></span></button>
+                <button class="btn btn-mute"><span class="fa fa-volume-off"></span></button>
+                <button class="btn btn-expand"><span class="fa fa-expand"></span></button>
+              </div>
           </div>
+
+          <div class="video-name-container">
+            <div style="float: left">
+              <h6>Now Playing&nbsp;&nbsp;{{videoName}}</h6>
+            </div>  
+            <div style="float: right">
+              <h6>Uploaded By&nbsp;&nbsp;{{uploader}}</h6>
+            </div>
+          </div>
+          <span *ngIf="showRatingsDiv">
+            <div class="star-container">
+                  <app-rating [rating]="ratingValue" (ratingClick)="rating($event)"></app-rating>
+            </div> 
+          </span>
         </div>
-         <div class="star-container">
-           <span *ngIf="showRatingsDiv">
-              <app-rating [rating]="ratingValue" (ratingClick)="rating($event)"></app-rating>
-           </span>
-          </div> 
-        
-      </div>
       <div id="listing" class="listing-style">
           <app-video-listing></app-video-listing>
       </div>

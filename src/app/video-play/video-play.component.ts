@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, Renderer2, Inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { RatingService } from './rating.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../login/login-service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-video-play',
@@ -30,6 +31,8 @@ export class VideoPlayComponent implements OnInit {
     private router: Router,
     private ratingService: RatingService,
     private loginService: LoginService,
+    private _renderer2: Renderer2,
+    @Inject(DOCUMENT) private _document: Document,
     private toastr: ToastrService) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -44,18 +47,225 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('videoWidth').style.width = "100%";
       document.getElementById('container-display').style.display = "block";
       document.getElementById('listing').style.marginLeft = "0px";
-      document.getElementById('listing').style.marginTop = "15%";
+      document.getElementById('listing').style.marginTop = "0%";
     }
     else {
-      document.getElementById('videoWidth').style.width = "70%";
+      document.getElementById('videoWidth').style.width = "65%";
       document.getElementById('container-display').style.display = "flex";
       document.getElementById('listing').style.marginLeft = "25px";
-      document.getElementById('listing').style.marginTop = "1.5%";
-      document.getElementById('videoWidth').style.marginTop = "2%";
+      document.getElementById('listing').style.marginTop = "-0.5%";
     }
   }
 
   ngOnInit() {
+    let script = this._renderer2.createElement('script');
+    script.type = "application/javascript";
+    script.text = ` var btnBackward = document.querySelector('.btn-backward');
+    var btnExpand = document.querySelector('.btn-expand');
+    var videoContainer = document.querySelector('.video-container-1');
+    var videoControls = document.querySelector('.video-controls');
+    var btnMute = document.querySelector('.btn-mute');
+    var btnMuteIcon = btnMute.querySelector('.fa');
+    var btnPlay = document.querySelector('.btn-pause');
+    var btnPlayIcon = btnPlay.querySelector('.fa');
+    var btnForward = document.querySelector('.btn-forward');
+    var btnReset = document.querySelector('.btn-reset');
+    var btnStop = document.querySelector('.btn-stop');
+    var progressBarFill = document.getElementById('progress-bar-fill');
+    var videoElement = document.querySelector('.video-container');
+    var bufferedBar = document.getElementById("buffered-amount");
+    var defaultBar = document.getElementById("default-bar");
+    var videoNameContainer = document.querySelector(".video-name-container");
+
+    window.onload = function () {
+      videoElement.addEventListener('timeupdate', updateProgress, false);
+  }
+
+    // Toggle full-screen mode
+    var expandVideo = () => {
+      if (videoElement.requestFullscreen) {
+        videoElement.style.width = "100%";
+        videoElement.style.height = "100%";
+        videoContainer.requestFullscreen();
+      
+      } else if (videoElement.mozRequestFullScreen) {
+        // Version for Firefox
+        videoElement.style.width = "100%";
+        videoElement.style.height = "100%";
+        videoContainer.mozRequestFullScreen();
+      } else if (videoElement.webkitRequestFullscreen) {
+        // Version for Chrome and Safari
+        videoElement.style.width = "100%";
+        videoElement.style.height = "100%";
+        videoContainer.webkitRequestFullscreen();
+      }
+    }
+
+    // Move the video backward for 5 seconds
+    var moveBackward = () => {
+      videoElement.currentTime -= 5;
+    }
+
+    // Move the video forward for 5 seconds
+    var moveForward = () => {
+      videoElement.currentTime += 5;
+    }
+
+    // Mute the video
+    var muteVideo = () => {
+      if (videoElement.muted) {
+        videoElement.muted = false;
+
+        btnMuteIcon.classList.remove('fa-volume-up');
+        btnMuteIcon.classList.add('fa-volume-off');
+      } else {
+        videoElement.muted = true;
+        btnMuteIcon.classList.remove('fa-volume-off');
+        btnMuteIcon.classList.add('fa-volume-up');
+      }
+    }
+
+    // Play / Pause the video
+    var playPauseVideo = () => {
+      if (videoElement.paused) {
+        videoElement.play();
+
+        btnPlayIcon.classList.remove('fa-play');
+        btnPlayIcon.classList.add('fa-pause');
+      } else {
+        videoElement.pause();
+
+        btnPlayIcon.classList.remove('fa-pause');
+        btnPlayIcon.classList.add('fa-play');
+      }
+    }
+
+    // Restart the video
+    var restartVideo = () => {
+      videoElement.currentTime = 0;
+
+      btnPlay.removeAttribute('hidden');
+      btnReset.setAttribute('hidden', 'true');
+      videoElement.play();
+      btnPlayIcon.classList.add('fa-pause');
+    }
+
+    // Stop the video
+    var stopVideo = () => {
+      videoElement.pause();
+      videoElement.currentTime = 0;
+      btnPlayIcon.classList.remove('fa-pause');
+      btnPlayIcon.classList.add('fa-play');
+    }
+
+    // Update progress bar as the video plays
+    var updateProgress = () => {
+        let currentWidth = (100/videoElement.duration) * videoElement.currentTime;
+        progressBarFill.style.width = currentWidth + "%";
+    }
+
+    function seek(e) {
+      var percent = e.offsetX/defaultBar.offsetWidth;
+      videoElement.currentTime = percent * videoElement.duration;
+      e.target.value = Math.floor(percent / 100);
+    }
+
+    function changeHeight(){
+      progressBarFill.style.height = "8px";
+      defaultBar.style.height = "8px";
+      bufferedBar.style.height = "8px";
+    }
+
+    function defaultHeight(){
+      progressBarFill.style.height = "4px";
+      defaultBar.style.height = "4px";
+      bufferedBar.style.height = "4px";
+    }
+
+    function disableControls(){
+      videoControls.style.display = "block";
+      setTimeout(()=>{
+        if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
+          videoControls.style.display = "none"
+        }
+      },10000);
+    }
+
+    function inactivityTimer(){
+      if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
+        setTimeout(()=>{
+          videoControls.style.display = "none"
+        },10000);
+        videoContainer.addEventListener('click', disableControls);
+        videoNameContainer.style.display = "none";
+      }
+      else{
+        videoNameContainer.style.display = "block";
+        enableControls();
+      }
+    }
+
+    function enableControls(){
+      videoControls.style.display = "block";
+      videoContainer.removeEventListener('click', disableControls)
+    }
+
+
+    // Event listeners
+    btnBackward.addEventListener('click', moveBackward, false);
+    btnExpand.addEventListener('click', expandVideo, false);
+    btnMute.addEventListener('click', muteVideo, false);
+    btnPlay.addEventListener('click', playPauseVideo, false);
+    btnForward.addEventListener('click', moveForward, false);
+    btnReset.addEventListener('click', restartVideo, false);
+    btnStop.addEventListener('click', stopVideo, false);
+    bufferedBar.addEventListener('click',seek);
+    progressBarFill.addEventListener('click',seek);
+    defaultBar.addEventListener('click',seek);
+
+    progressBarFill.addEventListener('mouseover',changeHeight);
+    progressBarFill.addEventListener('mouseleave', defaultHeight);
+
+    bufferedBar.addEventListener('mouseover',changeHeight);
+    bufferedBar.addEventListener('mouseleave', defaultHeight);
+
+    defaultBar.addEventListener('mouseover',changeHeight);
+    defaultBar.addEventListener('mouseleave', defaultHeight);
+
+    document.addEventListener("fullscreenchange",inactivityTimer);
+
+    /* Firefox */
+    document.addEventListener("mozfullscreenchange",inactivityTimer);
+
+    /* Chrome, Safari and Opera */
+    document.addEventListener("webkitfullscreenchange",inactivityTimer);
+
+    /* IE / Edge */
+    document.addEventListener("msfullscreenchange",inactivityTimer);
+
+
+    videoElement.addEventListener('ended', () => {
+      btnPlay.setAttribute('hidden', 'true');
+      btnReset.removeAttribute('hidden');
+    }, false);
+
+    videoElement.addEventListener('timeupdate', updateProgress, false);
+
+    videoElement.addEventListener('progress', function() {
+      var duration =  videoElement.duration;
+      if (duration > 0) {
+        for (var i = 0; i < videoElement.buffered.length; i++) {
+              if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime) {
+                  document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * 100 + "%";
+                  // console.log(document.getElementById("buffered-amount").style.width)
+                  break;
+              }
+          }
+      }
+    });
+    `
+    this._renderer2.appendChild(this._document.body, script);
+
     this.loginService.isLoggedIn.subscribe((value) => {
       console.log(value);
     })
