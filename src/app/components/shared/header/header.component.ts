@@ -47,7 +47,6 @@ export class HeaderComponent implements OnInit {
   }
 
   navigate(){
-    console.log("Inside navigate")
     this.router.navigate(['auth/login']);
   }
 }

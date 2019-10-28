@@ -41,7 +41,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   uploadFile(FileInput){
-    console.log(FileInput);
     this.file = FileInput[0];
   }
 

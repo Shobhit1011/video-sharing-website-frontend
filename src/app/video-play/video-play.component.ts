@@ -314,7 +314,6 @@ export class VideoPlayComponent implements OnInit {
         for (var i = 0; i < videoElement.buffered.length; i++) {
               if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime) {
                   document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * 100 + "%";
-                  // console.log(document.getElementById("buffered-amount").style.width)
                   break;
               }
           }
@@ -324,7 +323,7 @@ export class VideoPlayComponent implements OnInit {
     this._renderer2.appendChild(this._document.body, script);
 
     this.loginService.isLoggedIn.subscribe((value) => {
-      console.log(value);
+     
     })
     this.route.params.subscribe(routeParams => {
       this.http.get(`${environment.apiUrl}/videoById?id=${routeParams.id}`).subscribe((response) => {
