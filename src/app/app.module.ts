@@ -26,6 +26,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { RatingComponent } from './components/shared/rating/rating.component';
 import { SignupComponent } from './signup/signup.component';
+import { RecommendationComponent } from './recommendation/recommendation.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { SignupComponent } from './signup/signup.component';
     HomeComponent,
     HeaderComponent,
     RatingComponent,
-    SignupComponent
+    SignupComponent,
+    RecommendationComponent
   ],
   imports: [
     BrowserModule,

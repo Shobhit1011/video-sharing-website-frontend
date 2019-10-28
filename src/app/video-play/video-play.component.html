@@ -16,6 +16,8 @@
                   <span id="progress-bar-fill"></span>
                   <span id="default-bar"></span>
               </div>
+              <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar">
+              </p>
               <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;">
                 <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
                 <button class="btn btn-pause"><span class="fa fa-pause"></span></button>
@@ -42,6 +44,7 @@
           </span>
         </div>
       <div id="listing" class="listing-style">
+          <app-recommendation></app-recommendation><hr class="seperator">
           <app-video-listing></app-video-listing>
       </div>
     </div>

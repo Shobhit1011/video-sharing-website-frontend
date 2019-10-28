@@ -76,6 +76,7 @@ export class VideoPlayComponent implements OnInit {
     var bufferedBar = document.getElementById("buffered-amount");
     var defaultBar = document.getElementById("default-bar");
     var videoNameContainer = document.querySelector(".video-name-container");
+    var timeBar = document.getElementById("time-bar");
 
     window.onload = function () {
       videoElement.addEventListener('timeupdate', updateProgress, false);
@@ -162,6 +163,58 @@ export class VideoPlayComponent implements OnInit {
     var updateProgress = () => {
         let currentWidth = (100/videoElement.duration) * videoElement.currentTime;
         progressBarFill.style.width = currentWidth + "%";
+        if(videoElement.duration){
+          if(videoElement.duration/3600 >= 1){
+            let totalTimeInHours = Math.floor(videoElement.duration/3600);
+            let totalModTimeInHours = totalTimeInHours > 9 ? totalTimeInHours : '0'+totalTimeInHours;
+            let totalTime = totalTimeInHours % 3600;
+            let totalTimeInMinutes = Math.floor(totalTime/60);
+            let totalModTimeInMinutes = totalTimeInMinutes > 9 ? totalTimeInMinutes : '0'+totalTimeInMinutes;
+            let totalTime2 = totalTimeInMinutes % 60;
+            let totalTimeInSeconds = totalTime2;
+            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
+            let totalDuration = totalModTimeInHours + ":" + totalModTimeInMinutes + ":" +totalModTimeInSeconds;
+  
+            let timeInHours = Math.floor(videoElement.currentTime/3600);
+            let modTimeInHours = timeInHours > 9 ? timeInHours : '0'+timeInHours;
+            let time = timeInHours % 3600;
+            let timeInMinutes = Math.floor(time/60);
+            let modTimeInMinutes = timeInMinutes > 9 ? timeInMinutes : '0'+timeInMinutes;
+            let time2 = timeInMinutes % 60;
+            let timeInSeconds = time2;
+            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
+            let timeElapsed = modTimeInHours + ":" + modTimeInMinutes + ":" +modTimeInSeconds;
+            
+            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
+          }
+          else if(videoElement.duration/60 >= 1){
+            let totalTimeInMinutes = Math.floor(videoElement.duration/60);
+            let totalModTimeInMinutes = totalTimeInMinutes > 9 ? totalTimeInMinutes : '0'+totalTimeInMinutes;
+            let totalTimeInSeconds = Math.floor(videoElement.duration%60);
+            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
+            let totalDuration = totalModTimeInMinutes + ":" +totalModTimeInSeconds;
+  
+            let timeInMinutes = Math.floor(videoElement.currentTime/60);
+            let modTimeInMinutes = timeInMinutes > 9 ? timeInMinutes : '0'+timeInMinutes;
+            let timeInSeconds = Math.floor(videoElement.currentTime%60);
+            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
+            let timeElapsed = modTimeInMinutes + ":" +modTimeInSeconds;
+  
+            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
+  
+          }
+          else{
+            let totalTimeInSeconds = Math.floor(videoElement.duration%60);
+            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
+            let totalDuration = "00" + ":" +totalModTimeInSeconds;
+  
+            let timeInSeconds = Math.floor(videoElement.currentTime%60);
+            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
+            let timeElapsed = "00" + ":" +modTimeInSeconds;
+  
+            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
+          }
+      }
     }
 
     function seek(e) {

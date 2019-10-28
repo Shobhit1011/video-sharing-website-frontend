@@ -1,0 +1,38 @@
+.item-content {
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.break-word{
+    word-break: break-word;
+}
+
+.content-container{
+    margin-left: 25px;
+    height: 100px;
+    width: 250px
+}
+
+.card-container{
+    display: flex;
+    height: 100px;
+    margin-top: 5px;
+}
+
+.card-image-container{
+    height: 100px;
+    width: 230px;
+    overflow:hidden;
+}
+
+.mat-card-content{
+    width: 100%
+}
+
+@supports (-ms-ime-align: auto) {
+    .card-image-container-edge{
+        height: 100px !important;
+        width: 180px !important;
+        overflow:hidden;
+    }
+  }
