@@ -75,7 +75,7 @@ video {
 }
 .video-controls{
     padding-top: 5px;
-    background: transparent;
+    background: black;
     z-index: 2147483647;
     bottom:-50px;
     transform: translateY(-90%);
@@ -130,4 +130,13 @@ video::-webkit-media-controls-enclosure {
 
 hr.seperator {
     border-color: black;
+}
+
+.select-style{
+    margin-top: 5px;
+    height: 31px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, Renderer2, Inject, SystemJsNgModuleLoader } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
@@ -380,5 +380,11 @@ export class VideoPlayComponent implements OnInit {
         this.toastr.error("Something went wrong");
       }
     })
+  }
+
+  changePlayBackSpeed(event){
+    const playBackSpeed = event.target.value;
+    const player = this.elRef.nativeElement.querySelector('video');
+    player.playbackRate = playBackSpeed;
   }
 }

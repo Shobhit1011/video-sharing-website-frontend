@@ -16,8 +16,16 @@
                   <span id="progress-bar-fill"></span>
                   <span id="default-bar"></span>
               </div>
-              <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar">
-              </p>
+              <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar"></p>
+              <div style="float:right;display: flex">
+                <span style="color: white;margin-top: 12px;">Speed&nbsp;&nbsp;</span>
+                <select class="form-control select-style" (change)=changePlayBackSpeed($event)>
+                  <option>1.0</option>
+                  <option>1.2</option>
+                  <option>1.5</option>
+                  <option>2.0</option>
+                </select>
+              </div>
               <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;">
                 <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
                 <button class="btn btn-pause"><span class="fa fa-pause"></span></button>
