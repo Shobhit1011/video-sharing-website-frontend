@@ -31,6 +31,7 @@
     "ngx-bootstrap": "^5.1.1",
     "ngx-toastr": "^10.1.0",
     "rxjs": "^6.4.0",
+    "shaka-player": "^2.5.6",
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.9.1"

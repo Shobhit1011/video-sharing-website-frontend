@@ -8,7 +8,6 @@
     <div class="video-playing-container margin-left-10" id="container-display">
       <div id="videoWidth" class="video-container-1">
           <video class="video-container" controlsList="nodownload">
-                <source *ngIf="url" [src]="url">
           </video>
           <div class="video-controls">
               <div style="background-color: black;">
@@ -18,7 +17,6 @@
               </div>
               <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar"></p>
               <div style="float:right;display: flex">
-                <span style="color: white;margin-top: 12px;">Speed&nbsp;&nbsp;</span>
                 <select class="form-control select-style" (change)=changePlayBackSpeed($event)>
                   <option>1.0</option>
                   <option>1.2</option>
@@ -53,7 +51,9 @@
         </div>
       <div id="listing" class="listing-style">
           <app-recommendation></app-recommendation><hr class="seperator">
-          <app-video-listing></app-video-listing>
+          <div *ngIf="videoName">
+            <app-video-listing [filteredVideo]="videoName"></app-video-listing>
+          </div>
       </div>
     </div>
   </body>

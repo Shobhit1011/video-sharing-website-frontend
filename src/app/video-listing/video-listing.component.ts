@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { VideoListingService } from './video-listing.service';
 import { environment } from 'src/environments/environment';
 
@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class VideoListingComponent implements OnInit {
 
+  @Input() filteredVideo: String;
   videos: any;
   url:String = environment.apiUrl+"/image?name=";
   usernames = [];
@@ -17,7 +18,12 @@ export class VideoListingComponent implements OnInit {
 
   ngOnInit() {
     this.videoListingService.getVideoList().subscribe((response)=>{
+      console.log(this.filteredVideo)
+      
       this.videos = response;
+      console.log(this.videos);
+      this.videos = this.videos.filter((video)=> video.name_in_folder != this.filteredVideo);
+      console.log(this.videos);
     });
   }
 

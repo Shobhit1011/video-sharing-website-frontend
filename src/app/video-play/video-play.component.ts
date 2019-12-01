@@ -7,6 +7,7 @@ import { RatingService } from './rating.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../login/login-service';
 import { DOCUMENT } from '@angular/common';
+import * as shaka from 'shaka-player'
 
 @Component({
   selector: 'app-video-play',
@@ -23,6 +24,7 @@ export class VideoPlayComponent implements OnInit {
   videoId: String;
   ratingValue: Number;
   showRatingsDiv: Boolean = false;
+  manifestUri:String;
 
   constructor(private route: ActivatedRoute,
     private elRef: ElementRef,
@@ -48,12 +50,16 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('container-display').style.display = "block";
       document.getElementById('listing').style.marginLeft = "0px";
       document.getElementById('listing').style.marginTop = "0%";
+      document.getElementById('container-display').style.marginLeft = '0%';
+      document.getElementById('container-display').style.marginRight = '0%';
     }
     else {
       document.getElementById('videoWidth').style.width = "65%";
       document.getElementById('container-display').style.display = "flex";
       document.getElementById('listing').style.marginLeft = "25px";
       document.getElementById('listing').style.marginTop = "-0.5%";
+      document.getElementById('container-display').style.marginLeft = '5%';
+      document.getElementById('container-display').style.marginRight = '0%';
     }
   }
 
@@ -68,6 +74,7 @@ export class VideoPlayComponent implements OnInit {
     var btnMuteIcon = btnMute.querySelector('.fa');
     var btnPlay = document.querySelector('.btn-pause');
     var btnPlayIcon = btnPlay.querySelector('.fa');
+    var btnFullScreenIcon = btnExpand.querySelector('.fa');
     var btnForward = document.querySelector('.btn-forward');
     var btnReset = document.querySelector('.btn-reset');
     var btnStop = document.querySelector('.btn-stop');
@@ -77,6 +84,8 @@ export class VideoPlayComponent implements OnInit {
     var defaultBar = document.getElementById("default-bar");
     var videoNameContainer = document.querySelector(".video-name-container");
     var timeBar = document.getElementById("time-bar");
+    var fullScreenFlag = 0;
+    var timeout;
 
     window.onload = function () {
       videoElement.addEventListener('timeupdate', updateProgress, false);
@@ -84,21 +93,43 @@ export class VideoPlayComponent implements OnInit {
 
     // Toggle full-screen mode
     var expandVideo = () => {
-      if (videoElement.requestFullscreen) {
-        videoElement.style.width = "100%";
-        videoElement.style.height = "100%";
-        videoContainer.requestFullscreen();
-      
-      } else if (videoElement.mozRequestFullScreen) {
-        // Version for Firefox
-        videoElement.style.width = "100%";
-        videoElement.style.height = "100%";
-        videoContainer.mozRequestFullScreen();
-      } else if (videoElement.webkitRequestFullscreen) {
-        // Version for Chrome and Safari
-        videoElement.style.width = "100%";
-        videoElement.style.height = "100%";
-        videoContainer.webkitRequestFullscreen();
+      if(!fullScreenFlag){
+        if (videoElement.requestFullscreen) {
+          videoElement.style.width = "100%";
+          videoElement.style.height = "100%";
+          videoContainer.requestFullscreen();
+          fullScreenFlag = 1;
+          btnFullScreenIcon.classList.remove('fa-expand');
+          btnFullScreenIcon.classList.add('fa-compress');
+        } else if (videoElement.mozRequestFullScreen) {
+          // Version for Firefox
+          videoElement.style.width = "100%";
+          videoElement.style.height = "100%";
+          videoContainer.mozRequestFullScreen();
+          fullScreenFlag = 1;
+          btnFullScreenIcon.classList.remove('fa-expand');
+          btnFullScreenIcon.classList.add('fa-compress');
+        } else if (videoElement.webkitRequestFullscreen) {
+          // Version for Chrome and Safari
+          videoElement.style.width = "100%";
+          videoElement.style.height = "100%";
+          videoContainer.webkitRequestFullscreen();
+          fullScreenFlag = 1;
+          btnFullScreenIcon.classList.remove('fa-expand');
+          btnFullScreenIcon.classList.add('fa-compress');
+        }
+      }
+      else{
+        fullScreenFlag = 0;
+        clearTimeout(timeout);
+        videoControls.style.display = "block";
+        console.log(document.webkitIsFullScreen);
+        document.exitFullscreen();
+        console.log(document.webkitIsFullScreen);
+        btnFullScreenIcon.classList.remove('fa-compress');
+        btnFullScreenIcon.classList.add('fa-expand');
+        videoControls.style.display = "block";
+        videoContainer.removeEventListener('mousemove', disableControls)
       }
     }
 
@@ -235,10 +266,11 @@ export class VideoPlayComponent implements OnInit {
       bufferedBar.style.height = "4px";
     }
 
-    var timeout;
+    
 
     function disableControls(){
       videoControls.style.display = "block";
+      console.log(document.fullScreen, document.webkitIsFullScreen);
       clearTimeout(timeout);
       timeout = setTimeout(()=>{
         if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
@@ -332,6 +364,7 @@ export class VideoPlayComponent implements OnInit {
         this.uploader = response['uploaded_by'];
         this.url = `${environment.apiUrl}/videoStreaming?filename=${this.videoName}`;
         this.videoId = routeParams.id;
+        this.manifestUri = response['video']['manifest_path'];
 
         this.loginService.isLoggedIn.subscribe((isLoggedIn) => {
           if (isLoggedIn && isLoggedIn === true) {
@@ -353,10 +386,27 @@ export class VideoPlayComponent implements OnInit {
         })
 
         const player = this.elRef.nativeElement.querySelector('video');
-        player.load();
-        player.play();
+        let shaka_player = new shaka.Player(player);
+
+        shaka_player.addEventListener('error', this.onErrorEvent);
+
+        // Try to load a manifest.
+        // This is an asynchronous process.
+        shaka_player.load(this.manifestUri).then(() => {
+          player.play();
+        }).catch(this.onError);
       })
     });
+  }
+
+  private onErrorEvent(event) {
+    // Extract the shaka.util.Error object from the event.
+    this.onError(event.detail);
+  }
+
+  private onError(error) {
+    // Log the error.
+    console.error('Error code', error.code, 'object', error);
   }
 
   play() {

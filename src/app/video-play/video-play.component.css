@@ -3,6 +3,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
+    background-color: black;
 }
 .video-container-1{
     height: 70%;
@@ -29,8 +30,8 @@ video {
 .video-playing-container{
     display: flex;
     padding-top: 80px;
-    margin-right: 2%;
-    margin-left: 2%;
+    margin-right: 5%;
+    margin-left: 0%;
 }
 .video-name-container{
     background-color: #C0C0C0;
@@ -85,7 +86,7 @@ video {
 #progress-bar-fill {
     width: 0;
     height: 4px;
-    background-color: red;
+    background-color:#f00;
     transition: width .35s linear;
     position: absolute;
     z-index: 2;
@@ -104,7 +105,7 @@ video {
 
  #default-bar{
      width: 100%;
-     background-color: #50514D;
+     background-color: rgba(255,255,255,.2);
      position: absolute;
      height: 4px;
      z-index: 1;
