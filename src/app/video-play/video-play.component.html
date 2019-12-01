@@ -24,6 +24,14 @@
                   <option>2.0</option>
                 </select>
               </div>
+              <div style="float:right;display: flex">
+                <select class="form-control select-style" (change)=changeQuality($event)>
+                  <option value="full">Auto</option>
+                  <option value="720">720p</option>
+                  <option value="540">540p</option>
+                  <option value="360">360p</option>
+                </select>
+              </div>
               <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;">
                 <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
                 <button class="btn btn-pause"><span class="fa fa-pause"></span></button>

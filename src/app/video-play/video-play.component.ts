@@ -25,6 +25,7 @@ export class VideoPlayComponent implements OnInit {
   ratingValue: Number;
   showRatingsDiv: Boolean = false;
   manifestUri:String;
+  shaka_player;
 
   constructor(private route: ActivatedRoute,
     private elRef: ElementRef,
@@ -386,13 +387,13 @@ export class VideoPlayComponent implements OnInit {
         })
 
         const player = this.elRef.nativeElement.querySelector('video');
-        let shaka_player = new shaka.Player(player);
+        this.shaka_player = new shaka.Player(player);
 
-        shaka_player.addEventListener('error', this.onErrorEvent);
+        this.shaka_player.addEventListener('error', this.onErrorEvent);
 
         // Try to load a manifest.
         // This is an asynchronous process.
-        shaka_player.load(this.manifestUri).then(() => {
+        this.shaka_player.load(this.manifestUri + '?quality=full').then(() => {
           player.play();
         }).catch(this.onError);
       })
@@ -436,5 +437,16 @@ export class VideoPlayComponent implements OnInit {
     const playBackSpeed = event.target.value;
     const player = this.elRef.nativeElement.querySelector('video');
     player.playbackRate = playBackSpeed;
+  }
+
+  changeQuality(event){
+    let quality = event.target.value; 
+    const player = this.elRef.nativeElement.querySelector('video');
+
+    const videoCurrentTime = player.currentTime;
+    this.shaka_player.load(this.manifestUri + `?quality=${quality}`).then(() => {
+      player.currentTime = videoCurrentTime;
+      player.play();
+    }).catch(this.onError);
   }
 }
