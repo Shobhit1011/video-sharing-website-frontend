@@ -141,3 +141,8 @@ hr.seperator {
     border: none;
     cursor: pointer;
 }
+
+video.loading {
+    background:black url(https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/source.gif) center center no-repeat;
+    background-size: 80px 80px;
+  }

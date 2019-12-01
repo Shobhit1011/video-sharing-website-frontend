@@ -339,6 +339,20 @@ export class VideoPlayComponent implements OnInit {
       btnReset.removeAttribute('hidden');
     }, false);
 
+    function showLoader(){
+      console.log("inside loading");
+      videoElement.classList.add('loading');
+    }
+
+    function hideLoader(){
+      console.log("inside canplay");
+      videoElement.classList.remove('loading');
+    }
+
+    videoElement.addEventListener('loadstart', showLoader, false);
+
+    videoElement.addEventListener('canplay', hideLoader, false);
+
     videoElement.addEventListener('timeupdate', updateProgress, false);
 
     videoElement.addEventListener('progress', function() {
