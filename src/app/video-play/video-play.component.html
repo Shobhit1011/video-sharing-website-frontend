@@ -7,6 +7,7 @@
     <app-header (uploadButtonClicked)="stop()" (dialogClosed)="play()"></app-header>
     <div class="video-playing-container margin-left-10" id="container-display">
       <div id="videoWidth" class="video-container-1">
+          <div id="cover-spin"></div>
           <video class="video-container" controlsList="nodownload">
           </video>
           <div class="video-controls">
@@ -16,7 +17,7 @@
                   <span id="default-bar"></span>
               </div>
               <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar"></p>
-              <div style="float:right;display: flex">
+              <div style="float:right;display: flex" id="speed">
                 <select class="form-control select-style" (change)=changePlayBackSpeed($event)>
                   <option>1.0</option>
                   <option>1.2</option>
@@ -24,7 +25,7 @@
                   <option>2.0</option>
                 </select>
               </div>
-              <div style="float:right;display: flex">
+              <div style="float:right;display: flex" id="quality">
                 <select class="form-control select-style" (change)=changeQuality($event)>
                   <option value="full">Auto</option>
                   <option value="720">720p</option>
@@ -58,7 +59,9 @@
           </span>
         </div>
       <div id="listing" class="listing-style">
-          <app-recommendation></app-recommendation><hr class="seperator">
+          <div *ngIf="loggedIn">
+            <app-recommendation></app-recommendation><hr class="seperator">
+          </div>
           <div *ngIf="videoName">
             <app-video-listing [filteredVideo]="videoName"></app-video-listing>
           </div>

@@ -143,6 +143,82 @@ hr.seperator {
 }
 
 video.loading {
-    background:black url(https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/source.gif) center center no-repeat;
-    background-size: 50px 50px;
+    background:black;
+}
+
+.image-style{
+    height:50px;
+    width:50px;
+    z-index: 2;
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#cover-spin {
+    position: absolute;
+    height: 70%;
+    width: 100%;
+    left:0;right:0;top:0;bottom:0;
+    z-index:9999;
+    display: block;
+}
+
+@-webkit-keyframes spin {
+	from {-webkit-transform:rotate(0deg);}
+	to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+    content:'';
+    display:block;
+    position:absolute;
+    left:46%;top:52%;
+    width:50px;height:50px;
+    border-style:solid;
+    border-color:white;
+    border-top-color:transparent;
+    border-width: 4px;
+    border-radius:50%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+}
+
+@media only screen and (max-width: 600px){
+    #cover-spin::after {
+        content:'';
+        display:block;
+        position:absolute;
+        left:41%;top:30%;
+        width:50px;height:50px;
+        border-style:solid;
+        border-color:white;
+        border-top-color:transparent;
+        border-width: 4px;
+        border-radius:50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+}
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 20px 20px;
+    z-index: 1;
+    bottom: 100%;
   }

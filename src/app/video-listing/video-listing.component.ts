@@ -18,12 +18,8 @@ export class VideoListingComponent implements OnInit {
 
   ngOnInit() {
     this.videoListingService.getVideoList().subscribe((response)=>{
-      console.log(this.filteredVideo)
-      
       this.videos = response;
-      console.log(this.videos);
       this.videos = this.videos.filter((video)=> video.name_in_folder != this.filteredVideo);
-      console.log(this.videos);
     });
   }
 

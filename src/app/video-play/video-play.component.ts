@@ -8,11 +8,13 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../login/login-service';
 import { DOCUMENT } from '@angular/common';
 import * as shaka from 'shaka-player'
+import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-video-play',
   templateUrl: './video-play.component.html',
-  styleUrls: ['./video-play.component.css']
+  styleUrls: ['./video-play.component.css'],
+  providers:[NgbDropdownConfig]
 })
 export class VideoPlayComponent implements OnInit {
 
@@ -28,6 +30,7 @@ export class VideoPlayComponent implements OnInit {
   shaka_player;
 
   constructor(private route: ActivatedRoute,
+    private config: NgbDropdownConfig,
     private elRef: ElementRef,
     public dialog: MatDialog,
     private http: HttpClient,
@@ -38,6 +41,8 @@ export class VideoPlayComponent implements OnInit {
     @Inject(DOCUMENT) private _document: Document,
     private toastr: ToastrService) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.config.placement = 'top-left';
+    this.config.autoClose = false;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -53,6 +58,8 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('listing').style.marginTop = "0%";
       document.getElementById('container-display').style.marginLeft = '0%';
       document.getElementById('container-display').style.marginRight = '0%';
+      document.getElementById('quality').style.display = "none";
+      document.getElementById('speed').style.display = "none";
     }
     else {
       document.getElementById('videoWidth').style.width = "65%";
@@ -61,6 +68,8 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('listing').style.marginTop = "-0.5%";
       document.getElementById('container-display').style.marginLeft = '5%';
       document.getElementById('container-display').style.marginRight = '0%';
+      document.getElementById('quality').style.display = "block";
+      document.getElementById('speed').style.display = "block";
     }
   }
 
@@ -124,9 +133,7 @@ export class VideoPlayComponent implements OnInit {
         fullScreenFlag = 0;
         clearTimeout(timeout);
         videoControls.style.display = "block";
-        console.log(document.webkitIsFullScreen);
         document.exitFullscreen();
-        console.log(document.webkitIsFullScreen);
         btnFullScreenIcon.classList.remove('fa-compress');
         btnFullScreenIcon.classList.add('fa-expand');
         videoControls.style.display = "block";
@@ -251,8 +258,10 @@ export class VideoPlayComponent implements OnInit {
 
     function seek(e) {
       var percent = e.offsetX/defaultBar.offsetWidth;
-      videoElement.currentTime = percent * videoElement.duration;
       e.target.value = Math.floor(percent / 100);
+      let currentWidth = (100/videoElement.duration) * percent * videoElement.duration;
+      progressBarFill.style.width = currentWidth + "%";
+      videoElement.currentTime = percent * videoElement.duration;
     }
 
     function changeHeight(){
@@ -271,7 +280,6 @@ export class VideoPlayComponent implements OnInit {
 
     function disableControls(){
       videoControls.style.display = "block";
-      console.log(document.fullScreen, document.webkitIsFullScreen);
       clearTimeout(timeout);
       timeout = setTimeout(()=>{
         if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
@@ -299,6 +307,12 @@ export class VideoPlayComponent implements OnInit {
       videoContainer.removeEventListener('mousemove', disableControls)
     }
 
+    videoElement.onwaiting = function(){
+      document.getElementById('cover-spin').style.display="block";
+    };
+    videoElement.onplaying = function(){
+      document.getElementById('cover-spin').style.display="none";
+    };
 
     // Event listeners
     btnBackward.addEventListener('click', moveBackward, false);
@@ -340,12 +354,11 @@ export class VideoPlayComponent implements OnInit {
     }, false);
 
     function showLoader(){
-      console.log("inside loading");
       videoElement.classList.add('loading');
+      document.getElementById('cover-spin').style.display="block";
     }
 
     function hideLoader(){
-      console.log("inside canplay");
       videoElement.classList.remove('loading');
     }
 
@@ -383,6 +396,7 @@ export class VideoPlayComponent implements OnInit {
 
         this.loginService.isLoggedIn.subscribe((isLoggedIn) => {
           if (isLoggedIn && isLoggedIn === true) {
+            this.loggedIn = true;
             this.showRatingsDiv = true;
             this.ratingService.getVideoRatingByUser(this.videoId).subscribe((response) => {
               if (response['message'] && response['message'] === "NOT_RATED_YET") {
@@ -438,7 +452,6 @@ export class VideoPlayComponent implements OnInit {
     this.ratingService.ratings(this.videoId, event.rating).subscribe((response) => {
       this.toastr.success("Rated Successfully");
     }, (error) => {
-      console.log(error)
       if (error.error.code === 400) {
         this.toastr.error(error.error.message);
       } else {
@@ -462,5 +475,9 @@ export class VideoPlayComponent implements OnInit {
       player.currentTime = videoCurrentTime;
       player.play();
     }).catch(this.onError);
+  }
+
+  showDropDown(){
+    document.getElementById('dropdown-options').style.display = "block";
   }
 }

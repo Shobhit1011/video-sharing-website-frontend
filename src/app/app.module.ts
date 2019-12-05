@@ -27,6 +27,7 @@ import { HeaderComponent } from './components/shared/header/header.component';
 import { RatingComponent } from './components/shared/rating/rating.component';
 import { SignupComponent } from './signup/signup.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
     MatDialogModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgbModule
   ],
   providers: [
     LoaderService,
