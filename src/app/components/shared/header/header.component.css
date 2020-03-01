@@ -2,14 +2,14 @@
     height: 50px;
     position: fixed;
     width: 100%;
-    z-index: 4;
-    background-color: #C0C0C0;
+    z-index: 9999999999;
+    background-color: #ECECEC;
 }
 .button-color{
-    background-color: black;
+    background-color: transparent;
 }
 .text-color{
-    color: white;
+    color: black;
 }
 .float-left{
     float: left;
@@ -18,7 +18,11 @@
     float: right;
 }
 .button-style{
-    width: 8%;
+    width: 5%;
     margin-right: 2%;
-    margin-top: 0.25%;
+    margin-top: 16px;
+    border: none;
+}
+.toolbar-filler {
+    flex: 1 1 auto
 }

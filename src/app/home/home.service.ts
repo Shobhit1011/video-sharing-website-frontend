@@ -10,6 +10,6 @@ export class HomeService {
   constructor(private http: HttpClient) { }
 
   getVideoList(){
-    return this.http.get(`${environment.apiUrl}/getAllVideos`);
+    return this.http.get(`${environment.apiUrl}/getAllVideos?skip=0&limit=100`);
   }
 }

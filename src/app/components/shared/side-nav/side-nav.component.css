@@ -1,0 +1,13 @@
+mat-sidenav-content {
+    height: 100vh;
+  }
+
+.nav-width{
+  width: 15%;
+}
+
+@media only screen and (max-width: 1024px){
+  .nav-width{
+    width: 50%;
+  }
+}

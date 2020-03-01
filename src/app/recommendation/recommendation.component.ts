@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { RecommendationService } from './recommendation.service';
 import { environment } from 'src/environments/environment'
 
@@ -11,13 +11,15 @@ export class RecommendationComponent implements OnInit {
 
   recommendedVideos;
   url:String = environment.apiUrl+"/image?name=";
+  @Input() filteredVideo: String;
 
   constructor(private recommendationService: RecommendationService) { }
 
   ngOnInit() {
     this.recommendationService.recommend().subscribe((response)=>{
-      this.recommendedVideos = response
-    })
+      this.recommendedVideos = response;
+      this.recommendedVideos = this.recommendedVideos.filter((video)=> video.name_in_folder != this.filteredVideo);
+    });
   }
 
   getFileName(name:String){
@@ -30,5 +32,4 @@ export class RecommendationComponent implements OnInit {
     let image_name_format = filename + ".png";
     return this.url + image_name_format;
   }
-
 }

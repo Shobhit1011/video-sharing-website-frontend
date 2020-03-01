@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, Renderer2, Inject, SystemJsNgModuleLoader } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener} from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
@@ -6,15 +6,16 @@ import { HttpClient } from '@angular/common/http';
 import { RatingService } from './rating.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../login/login-service';
-import { DOCUMENT } from '@angular/common';
 import * as shaka from 'shaka-player'
-import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
+import { PlaybackOptionsComponent } from '../playback-options/playback-options.component';
+import { Title } from '@angular/platform-browser';
+import { WebSocketService } from '../services/web-socket-service.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 @Component({
   selector: 'app-video-play',
   templateUrl: './video-play.component.html',
-  styleUrls: ['./video-play.component.css'],
-  providers:[NgbDropdownConfig]
+  styleUrls: ['./video-play.component.css']
 })
 export class VideoPlayComponent implements OnInit {
 
@@ -26,23 +27,23 @@ export class VideoPlayComponent implements OnInit {
   videoId: String;
   ratingValue: Number;
   showRatingsDiv: Boolean = false;
-  manifestUri:String;
+  manifestUri: String;
   shaka_player;
+  quality = "full";
+  playBacKRate = "1.0";
+  list;
+  currentVideo;
+  user;
+  comments;
+  message;
+  subscriptions;
+  video_script_path = '../../assets/scripts/video-player.js';
 
   constructor(private route: ActivatedRoute,
-    private config: NgbDropdownConfig,
-    private elRef: ElementRef,
-    public dialog: MatDialog,
-    private http: HttpClient,
-    private router: Router,
-    private ratingService: RatingService,
-    private loginService: LoginService,
-    private _renderer2: Renderer2,
-    @Inject(DOCUMENT) private _document: Document,
-    private toastr: ToastrService) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.config.placement = 'top-left';
-    this.config.autoClose = false;
+    private elRef: ElementRef, public dialog: MatDialog, private http: HttpClient, private router: Router, 
+    private ratingService: RatingService, private loginService: LoginService, private toastr: ToastrService, 
+    private titleService: Title, private websocketAPI: WebSocketService, private subscriptionService: SubscriptionService) {
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -56,366 +57,112 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('container-display').style.display = "block";
       document.getElementById('listing').style.marginLeft = "0px";
       document.getElementById('listing').style.marginTop = "0%";
+      document.getElementById('listing').style.width = "100%";
       document.getElementById('container-display').style.marginLeft = '0%';
       document.getElementById('container-display').style.marginRight = '0%';
       document.getElementById('quality').style.display = "none";
       document.getElementById('speed').style.display = "none";
+      document.getElementById('listing').style.marginTop = "20px"
+
     }
     else {
       document.getElementById('videoWidth').style.width = "65%";
       document.getElementById('container-display').style.display = "flex";
       document.getElementById('listing').style.marginLeft = "25px";
       document.getElementById('listing').style.marginTop = "-0.5%";
+      document.getElementById('listing').style.width = "25%";
       document.getElementById('container-display').style.marginLeft = '5%';
       document.getElementById('container-display').style.marginRight = '0%';
       document.getElementById('quality').style.display = "block";
       document.getElementById('speed').style.display = "block";
+      document.getElementById('listing').style.marginTop = "0px"
     }
+  }
+
+  loadVideoScript() {
+    const externalScriptArray = [
+      this.video_script_path
+    ];
+    for (let i = 0; i < externalScriptArray.length; i++) {
+      const scriptTag = document.createElement('script');
+      scriptTag.src = externalScriptArray[i];
+      scriptTag.type = 'text/javascript';
+      scriptTag.async = false;
+      scriptTag.charset = 'utf-8';
+      document.getElementsByTagName('head')[0].appendChild(scriptTag);
+    }
+  }
+
+  settingVariablesAndCss(response, routeParams){
+    this.widthCalculation();
+    this.titleService.setTitle(response['video']['videoName'].toUpperCase());
+    this.currentVideo = response['video'];
+    this.videoName = response['video']['name_in_folder'];
+    this.uploader = response['uploaded_by'];
+    this.url = `${environment.apiUrl}/videoStreaming?filename=${this.videoName}`;
+    this.videoId = routeParams.id;
+    this.manifestUri = response['video']['manifest_path'];
+    this.manifestUri = this.manifestUri.replace("localhost", "192.168.1.6");
   }
 
   ngOnInit() {
-    let script = this._renderer2.createElement('script');
-    script.type = "application/javascript";
-    script.text = ` var btnBackward = document.querySelector('.btn-backward');
-    var btnExpand = document.querySelector('.btn-expand');
-    var videoContainer = document.querySelector('.video-container-1');
-    var videoControls = document.querySelector('.video-controls');
-    var btnMute = document.querySelector('.btn-mute');
-    var btnMuteIcon = btnMute.querySelector('.fa');
-    var btnPlay = document.querySelector('.btn-pause');
-    var btnPlayIcon = btnPlay.querySelector('.fa');
-    var btnFullScreenIcon = btnExpand.querySelector('.fa');
-    var btnForward = document.querySelector('.btn-forward');
-    var btnReset = document.querySelector('.btn-reset');
-    var btnStop = document.querySelector('.btn-stop');
-    var progressBarFill = document.getElementById('progress-bar-fill');
-    var videoElement = document.querySelector('.video-container');
-    var bufferedBar = document.getElementById("buffered-amount");
-    var defaultBar = document.getElementById("default-bar");
-    var videoNameContainer = document.querySelector(".video-name-container");
-    var timeBar = document.getElementById("time-bar");
-    var fullScreenFlag = 0;
-    var timeout;
+    this.loadVideoScript();
+    this.loginService.isLoggedIn.subscribe(() => { });
 
-    window.onload = function () {
-      videoElement.addEventListener('timeupdate', updateProgress, false);
-  }
-
-    // Toggle full-screen mode
-    var expandVideo = () => {
-      if(!fullScreenFlag){
-        if (videoElement.requestFullscreen) {
-          videoElement.style.width = "100%";
-          videoElement.style.height = "100%";
-          videoContainer.requestFullscreen();
-          fullScreenFlag = 1;
-          btnFullScreenIcon.classList.remove('fa-expand');
-          btnFullScreenIcon.classList.add('fa-compress');
-        } else if (videoElement.mozRequestFullScreen) {
-          // Version for Firefox
-          videoElement.style.width = "100%";
-          videoElement.style.height = "100%";
-          videoContainer.mozRequestFullScreen();
-          fullScreenFlag = 1;
-          btnFullScreenIcon.classList.remove('fa-expand');
-          btnFullScreenIcon.classList.add('fa-compress');
-        } else if (videoElement.webkitRequestFullscreen) {
-          // Version for Chrome and Safari
-          videoElement.style.width = "100%";
-          videoElement.style.height = "100%";
-          videoContainer.webkitRequestFullscreen();
-          fullScreenFlag = 1;
-          btnFullScreenIcon.classList.remove('fa-expand');
-          btnFullScreenIcon.classList.add('fa-compress');
-        }
-      }
-      else{
-        fullScreenFlag = 0;
-        clearTimeout(timeout);
-        videoControls.style.display = "block";
-        document.exitFullscreen();
-        btnFullScreenIcon.classList.remove('fa-compress');
-        btnFullScreenIcon.classList.add('fa-expand');
-        videoControls.style.display = "block";
-        videoContainer.removeEventListener('mousemove', disableControls)
-      }
-    }
-
-    // Move the video backward for 5 seconds
-    var moveBackward = () => {
-      videoElement.currentTime -= 5;
-    }
-
-    // Move the video forward for 5 seconds
-    var moveForward = () => {
-      videoElement.currentTime += 5;
-    }
-
-    // Mute the video
-    var muteVideo = () => {
-      if (videoElement.muted) {
-        videoElement.muted = false;
-
-        btnMuteIcon.classList.remove('fa-volume-up');
-        btnMuteIcon.classList.add('fa-volume-off');
-      } else {
-        videoElement.muted = true;
-        btnMuteIcon.classList.remove('fa-volume-off');
-        btnMuteIcon.classList.add('fa-volume-up');
-      }
-    }
-
-    // Play / Pause the video
-    var playPauseVideo = () => {
-      if (videoElement.paused) {
-        videoElement.play();
-
-        btnPlayIcon.classList.remove('fa-play');
-        btnPlayIcon.classList.add('fa-pause');
-      } else {
-        videoElement.pause();
-
-        btnPlayIcon.classList.remove('fa-pause');
-        btnPlayIcon.classList.add('fa-play');
-      }
-    }
-
-    // Restart the video
-    var restartVideo = () => {
-      videoElement.currentTime = 0;
-
-      btnPlay.removeAttribute('hidden');
-      btnReset.setAttribute('hidden', 'true');
-      videoElement.play();
-      btnPlayIcon.classList.add('fa-pause');
-    }
-
-    // Stop the video
-    var stopVideo = () => {
-      videoElement.pause();
-      videoElement.currentTime = 0;
-      btnPlayIcon.classList.remove('fa-pause');
-      btnPlayIcon.classList.add('fa-play');
-    }
-
-    // Update progress bar as the video plays
-    var updateProgress = () => {
-        let currentWidth = (100/videoElement.duration) * videoElement.currentTime;
-        progressBarFill.style.width = currentWidth + "%";
-        if(videoElement.duration){
-          if(videoElement.duration/3600 >= 1){
-            let totalTimeInHours = Math.floor(videoElement.duration/3600);
-            let totalModTimeInHours = totalTimeInHours > 9 ? totalTimeInHours : '0'+totalTimeInHours;
-            let totalTime = totalTimeInHours % 3600;
-            let totalTimeInMinutes = Math.floor(totalTime/60);
-            let totalModTimeInMinutes = totalTimeInMinutes > 9 ? totalTimeInMinutes : '0'+totalTimeInMinutes;
-            let totalTime2 = totalTimeInMinutes % 60;
-            let totalTimeInSeconds = totalTime2;
-            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
-            let totalDuration = totalModTimeInHours + ":" + totalModTimeInMinutes + ":" +totalModTimeInSeconds;
-  
-            let timeInHours = Math.floor(videoElement.currentTime/3600);
-            let modTimeInHours = timeInHours > 9 ? timeInHours : '0'+timeInHours;
-            let time = timeInHours % 3600;
-            let timeInMinutes = Math.floor(time/60);
-            let modTimeInMinutes = timeInMinutes > 9 ? timeInMinutes : '0'+timeInMinutes;
-            let time2 = timeInMinutes % 60;
-            let timeInSeconds = time2;
-            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
-            let timeElapsed = modTimeInHours + ":" + modTimeInMinutes + ":" +modTimeInSeconds;
-            
-            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
-          }
-          else if(videoElement.duration/60 >= 1){
-            let totalTimeInMinutes = Math.floor(videoElement.duration/60);
-            let totalModTimeInMinutes = totalTimeInMinutes > 9 ? totalTimeInMinutes : '0'+totalTimeInMinutes;
-            let totalTimeInSeconds = Math.floor(videoElement.duration%60);
-            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
-            let totalDuration = totalModTimeInMinutes + ":" +totalModTimeInSeconds;
-  
-            let timeInMinutes = Math.floor(videoElement.currentTime/60);
-            let modTimeInMinutes = timeInMinutes > 9 ? timeInMinutes : '0'+timeInMinutes;
-            let timeInSeconds = Math.floor(videoElement.currentTime%60);
-            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
-            let timeElapsed = modTimeInMinutes + ":" +modTimeInSeconds;
-  
-            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
-  
-          }
-          else{
-            let totalTimeInSeconds = Math.floor(videoElement.duration%60);
-            let totalModTimeInSeconds = totalTimeInSeconds > 9 ? totalTimeInSeconds : '0'+totalTimeInSeconds;
-            let totalDuration = "00" + ":" +totalModTimeInSeconds;
-  
-            let timeInSeconds = Math.floor(videoElement.currentTime%60);
-            let modTimeInSeconds = timeInSeconds > 9 ? timeInSeconds : '0'+timeInSeconds;
-            let timeElapsed = "00" + ":" +modTimeInSeconds;
-  
-            timeBar.innerHTML = timeElapsed + "/" + totalDuration;
-          }
-      }
-    }
-
-    function seek(e) {
-      var percent = e.offsetX/defaultBar.offsetWidth;
-      e.target.value = Math.floor(percent / 100);
-      let currentWidth = (100/videoElement.duration) * percent * videoElement.duration;
-      progressBarFill.style.width = currentWidth + "%";
-      videoElement.currentTime = percent * videoElement.duration;
-    }
-
-    function changeHeight(){
-      progressBarFill.style.height = "8px";
-      defaultBar.style.height = "8px";
-      bufferedBar.style.height = "8px";
-    }
-
-    function defaultHeight(){
-      progressBarFill.style.height = "4px";
-      defaultBar.style.height = "4px";
-      bufferedBar.style.height = "4px";
-    }
-
-    
-
-    function disableControls(){
-      videoControls.style.display = "block";
-      clearTimeout(timeout);
-      timeout = setTimeout(()=>{
-        if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
-          videoControls.style.display = "none"
-        }
-      },3000);
-    }
-
-    function inactivityTimer(){
-      if(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen){
-        setTimeout(()=>{
-          videoControls.style.display = "none"
-        },3000);
-        videoContainer.addEventListener('mousemove', disableControls);
-        videoNameContainer.style.display = "none";
-      }
-      else{
-        videoNameContainer.style.display = "block";
-        enableControls();
-      }
-    }
-
-    function enableControls(){
-      videoControls.style.display = "block";
-      videoContainer.removeEventListener('mousemove', disableControls)
-    }
-
-    videoElement.onwaiting = function(){
-      document.getElementById('cover-spin').style.display="block";
-    };
-    videoElement.onplaying = function(){
-      document.getElementById('cover-spin').style.display="none";
-    };
-
-    // Event listeners
-    btnBackward.addEventListener('click', moveBackward, false);
-    btnExpand.addEventListener('click', expandVideo, false);
-    btnMute.addEventListener('click', muteVideo, false);
-    btnPlay.addEventListener('click', playPauseVideo, false);
-    btnForward.addEventListener('click', moveForward, false);
-    btnReset.addEventListener('click', restartVideo, false);
-    btnStop.addEventListener('click', stopVideo, false);
-    bufferedBar.addEventListener('click',seek);
-    progressBarFill.addEventListener('click',seek);
-    defaultBar.addEventListener('click',seek);
-
-    progressBarFill.addEventListener('mouseover',changeHeight);
-    progressBarFill.addEventListener('mouseleave', defaultHeight);
-
-    bufferedBar.addEventListener('mouseover',changeHeight);
-    bufferedBar.addEventListener('mouseleave', defaultHeight);
-
-    defaultBar.addEventListener('mouseover',changeHeight);
-    defaultBar.addEventListener('mouseleave', defaultHeight);
-
-    document.addEventListener("fullscreenchange",inactivityTimer);
-
-    /* Firefox */
-    document.addEventListener("mozfullscreenchange",inactivityTimer);
-
-    /* Chrome, Safari and Opera */
-    document.addEventListener("webkitfullscreenchange",inactivityTimer);
-
-    /* IE / Edge */
-    document.addEventListener("msfullscreenchange",inactivityTimer);
-
-
-    videoElement.addEventListener('ended', () => {
-      btnPlayIcon.classList.remove('fa-pause');
-      btnPlayIcon.classList.add('fa-play');
-      btnReset.removeAttribute('hidden');
-    }, false);
-
-    function showLoader(){
-      videoElement.classList.add('loading');
-      document.getElementById('cover-spin').style.display="block";
-    }
-
-    function hideLoader(){
-      videoElement.classList.remove('loading');
-    }
-
-    videoElement.addEventListener('loadstart', showLoader, false);
-
-    videoElement.addEventListener('canplay', hideLoader, false);
-
-    videoElement.addEventListener('timeupdate', updateProgress, false);
-
-    videoElement.addEventListener('progress', function() {
-      var duration =  videoElement.duration;
-      if (duration > 0) {
-        for (var i = 0; i < videoElement.buffered.length; i++) {
-              if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime) {
-                  document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * 100 + "%";
-                  break;
-              }
-          }
-      }
-    });
-    `
-    this._renderer2.appendChild(this._document.body, script);
-
-    this.loginService.isLoggedIn.subscribe((value) => {
-     
-    })
+    // Setting Variables based on route params.
     this.route.params.subscribe(routeParams => {
       this.http.get(`${environment.apiUrl}/videoById?id=${routeParams.id}`).subscribe((response) => {
-        this.widthCalculation();
-        this.videoName = response['video']['name_in_folder'];
-        this.uploader = response['uploaded_by'];
-        this.url = `${environment.apiUrl}/videoStreaming?filename=${this.videoName}`;
-        this.videoId = routeParams.id;
-        this.manifestUri = response['video']['manifest_path'];
+        this.settingVariablesAndCss(response, routeParams);
 
+        // Checking User session for rating.
         this.loginService.isLoggedIn.subscribe((isLoggedIn) => {
           if (isLoggedIn && isLoggedIn === true) {
-            this.loggedIn = true;
-            this.showRatingsDiv = true;
-            this.ratingService.getVideoRatingByUser(this.videoId).subscribe((response) => {
-              if (response['message'] && response['message'] === "NOT_RATED_YET") {
-                this.ratingValue = 0;
-              }
-              else {
-                this.ratingValue = response['ratings'];
-              }
-            }, () => {
-              this.toastr.error("Something went wrong");
-            })
+            this.http.get(`${environment.apiUrl}/user/session`).subscribe((user) => {
+              this.user = user;
+              this.loggedIn = true;
+              this.showRatingsDiv = true;
+              this.ratingService.getVideoRatingByUser(this.videoId).subscribe((response) => {
+                if (response['message'] && response['message'] === "NOT_RATED_YET") {
+                  this.ratingValue = 0;
+                }
+                else {
+                  this.ratingValue = response['ratings'];
+                }
+              }, () => {
+                this.toastr.error("Something went wrong");
+              });
+
+          // Setting Comments Array.
+              this.http.get(`${environment.apiUrl}/comments/${routeParams.id}`).subscribe((comments) => {
+                this.comments = comments;
+                this.websocketAPI.newComment.subscribe((comment) => {
+                  if (comment['videoId'] === parseInt(routeParams.id)) {
+                    this.comments.push(comment);
+                    let set = new Set(this.comments);
+                    this.comments = [...set];
+                  }
+                });
+              });
+          
+            // Getting User Subscriptions.
+              this.subscriptionService.getUserSubscriptions(user['id']).subscribe((data) => {
+                this.subscriptions = data;
+              });
+            });
           }
           else {
             this.showRatingsDiv = false;
           }
-        })
+        });
+
+        // Logic for checking video buffering.
+        var lastPlayPos = 0;
+        var currentPlayPos = 0;
+        var bufferingDetected = false;
 
         const player = this.elRef.nativeElement.querySelector('video');
         this.shaka_player = new shaka.Player(player);
+        this.buffering(lastPlayPos, currentPlayPos, bufferingDetected, player, 150.0);
 
         this.shaka_player.addEventListener('error', this.onErrorEvent);
 
@@ -426,6 +173,49 @@ export class VideoPlayComponent implements OnInit {
         }).catch(this.onError);
       })
     });
+  }
+
+  //Checking whether user has subscription for particualr video or not.
+  checkSubscription(name) {
+    return this.subscriptions.includes(name);
+  }
+
+  private buffering(lastPlayPos, currentPlayPos, bufferingDetected, player, checkInterval) {
+    setInterval(checkBuffering, checkInterval)
+    function checkBuffering() {
+      if (player) {
+        currentPlayPos = player.currentTime
+        // checking offset should be at most the check interval
+        // but allow for some margin
+        var offset = (checkInterval - (checkInterval / 2)) / 1000
+
+        // if no buffering is currently detected,
+        // and the position does not seem to increase
+        // and the player isn't manually paused...
+        if (
+          !bufferingDetected
+          && currentPlayPos < (lastPlayPos + offset)
+          && !player.paused
+        ) {
+          document.getElementById('cover-spin').style.display = "block";
+          player.style.webkitFilter = "blur(3px)"
+          bufferingDetected = true
+        }
+
+        // if we were buffering but the player has advanced,
+        // then there is no buffering
+        if (
+          bufferingDetected
+          && currentPlayPos > (lastPlayPos + offset)
+          && !player.paused
+        ) {
+          document.getElementById('cover-spin').style.display = "none";
+          player.style.webkitFilter = "blur(0px)"
+          bufferingDetected = false
+        }
+        lastPlayPos = currentPlayPos
+      }
+    }
   }
 
   private onErrorEvent(event) {
@@ -460,24 +250,62 @@ export class VideoPlayComponent implements OnInit {
     })
   }
 
-  changePlayBackSpeed(event){
+  changePlayBackSpeed(event) {
     const playBackSpeed = event.target.value;
     const player = this.elRef.nativeElement.querySelector('video');
     player.playbackRate = playBackSpeed;
+    this.playBacKRate = playBackSpeed;
   }
 
-  changeQuality(event){
-    let quality = event.target.value; 
+  changeQuality(event) {
+    this.quality = event.target.value;
     const player = this.elRef.nativeElement.querySelector('video');
 
     const videoCurrentTime = player.currentTime;
-    this.shaka_player.load(this.manifestUri + `?quality=${quality}`).then(() => {
+    this.shaka_player.load(this.manifestUri + `?quality=${this.quality}`).then(() => {
+      player.playbackRate = this.playBacKRate;
       player.currentTime = videoCurrentTime;
       player.play();
     }).catch(this.onError);
   }
 
-  showDropDown(){
+  openPlayBackOptionsOnOnMobile() {
+    this.stop();
+    const player = this.elRef.nativeElement.querySelector('video');
+
+    const dialogRef = this.dialog.open(PlaybackOptionsComponent, {
+      width: '350px',
+      height: '350px',
+      autoFocus: false,
+      data: {
+        quality: this.quality,
+        playBackSpeed: this.playBacKRate,
+        video: this.elRef.nativeElement.querySelector('video')
+      }
+    });
+
+    dialogRef.componentInstance.onAdd.subscribe((data) => {
+      this.playBacKRate = data.speed;
+      this.quality = data.quality;
+      document.getElementById('quality_select')['value'] = this.quality;
+      document.getElementById('speed_select')['value'] = this.playBacKRate;
+
+      const videoCurrentTime = player.currentTime;
+      this.shaka_player.load(this.manifestUri + `?quality=${data.quality}`).then(() => {
+        player.currentTime = videoCurrentTime;
+        player.playbackRate = data.speed;
+        player.play();
+        dialogRef.close()
+      }).catch(this.onError);
+    });
+  }
+
+  showDropDown() {
     document.getElementById('dropdown-options').style.display = "block";
+  }
+
+  send(event) {
+    console.log(event)
+    this.websocketAPI._send(this.message, this.videoId, this.user.id);
   }
 }

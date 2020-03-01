@@ -3,6 +3,10 @@ import { MatDialog } from '@angular/material';
 import { FileUploadComponent } from 'src/app/file-upload/file-upload.component';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/login/login-service';
+import { LogoutService } from 'src/app/services/logout-service';
+import { ToastrService } from 'ngx-toastr';
+import { environment} from 'src/environments/environment';
+import { SidenavService } from 'src/app/services/sidenav.service';
 
 @Component({
   selector: 'app-header',
@@ -16,10 +20,20 @@ export class HeaderComponent implements OnInit {
   @Output() private uploadButtonClicked = new EventEmitter();
   @Output() private dialogClosed = new EventEmitter();
 
-  constructor(public dialog: MatDialog, private router:Router, private loginService: LoginService) { }
+  opened:Boolean = false;
+
+  constructor(public dialog: MatDialog, 
+    private router:Router, 
+    private loginService: LoginService, 
+    private logoutService: LogoutService,
+    private toastr: ToastrService,
+    private sideNavService: SidenavService) { }
 
   ngOnInit() {
-    this.loginService.getSession().subscribe(response=>{
+   this.sideNavService.isExpanded.subscribe((value)=>{
+     this.opened = value;
+   })
+   this.loginService.getSession().subscribe(response=>{
       if(response['session'] && response['session'] === "false"){
         this.loggedIn = false;
         this.loginService.changeStatus(false);
@@ -48,5 +62,17 @@ export class HeaderComponent implements OnInit {
 
   navigate(){
     this.router.navigate(['auth/login']);
+  }
+
+  logout(){
+    this.logoutService.logout().subscribe(()=>{
+      this.router.navigate(['/']);
+      this.toastr.success('Logged out Successfully');
+    })
+  }
+
+  sideNavChanged(){
+    this.opened = !this.opened;
+    this.sideNavService.changeStatus(this.opened);
   }
 }

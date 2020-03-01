@@ -1,27 +1,36 @@
-<div class="fixed-bar">
-        <span class="float-left">
-            <b>VIDEO SHARING WEBSITE</b>
-                <div *ngIf="loggedIn && userInfo">
-                <span class="float-left button-style">
-                    <b>Account:&nbsp;{{userInfo.email}}</b>
-                </span>
-                </div>
-            <div *ngIf="!loggedIn">
-                <span class="float-left button-style">
-                    <b>Not&nbsp;Logged&nbsp;In</b>
-                </span>
-            </div>
+<div class="fixed-bar" id="header">
+        <span class="float-left" style="margin-top: 10px;margin-left: 1%;">
+            <mat-icon (click)="sideNavChanged()" aria-label="Menu" style="cursor: pointer;">menu</mat-icon>
+            <img src="assets/images/logo.jpg" height="30px" width="30px" style="margin-left: 10px;">
+            <span style="margin-left: 10px;"><b>VideoWeb</b></span>
         </span>
         <span>
-            <button mat-button class="float-right" (click)="uploadFile()">
+           <button mat-button class="float-right" (click)="uploadFile()" style="margin-top: 10px">
                 <mat-icon>file_upload</mat-icon>
             </button>
         </span>
         <span>
             <div *ngIf="!loggedIn">
-                <button mat-raised-button class="button-color float-right button-style" (click)="navigate()">
-                    <span class="text-color">Login</span>
-                </button>
+                <div mat-button class="button-color float-right button-style" style="outline: none;cursor: pointer !important;" (click)="navigate()">
+                    <span class="text-color">
+                        <b>Login</b>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="loggedIn && userInfo">
+                <span class="float-right" style="margin-top: 5px; cursor: pointer !important;">
+                    <ngx-avatar [size]="40" name="{{userInfo.email}}" [matMenuTriggerFor]="menu"></ngx-avatar>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item style="outline: none;">
+                            <mat-icon>face</mat-icon>
+                            <label>Profile</label>
+                        </button>
+                        <button mat-menu-item style="outline: none;" (click)="logout()">
+                            <mat-icon>exit_to_app</mat-icon>
+                            <label>Logout</label>
+                        </button>
+                      </mat-menu>
+                </span>
             </div>
         </span>
     </div>

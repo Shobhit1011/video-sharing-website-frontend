@@ -1,71 +1,109 @@
 <html>
-  <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/assets/font-awesome-4.7.0/css/font-awesome.min.css">
-  </head>
-  <body>
-    <app-header (uploadButtonClicked)="stop()" (dialogClosed)="play()"></app-header>
-    <div class="video-playing-container margin-left-10" id="container-display">
-      <div id="videoWidth" class="video-container-1">
-          <div id="cover-spin"></div>
-          <video class="video-container" controlsList="nodownload">
-          </video>
-          <div class="video-controls">
-              <div style="background-color: black;">
-                  <span id="buffered-amount"></span>
-                  <span id="progress-bar-fill"></span>
-                  <span id="default-bar"></span>
-              </div>
-              <p style="float:left;color: white;padding-top: 1.25%;padding-left: 1%;" id="time-bar"></p>
-              <div style="float:right;display: flex" id="speed">
-                <select class="form-control select-style" (change)=changePlayBackSpeed($event)>
-                  <option>1.0</option>
-                  <option>1.2</option>
-                  <option>1.5</option>
-                  <option>2.0</option>
-                </select>
-              </div>
-              <div style="float:right;display: flex" id="quality">
-                <select class="form-control select-style" (change)=changeQuality($event)>
-                  <option value="full">Auto</option>
-                  <option value="720">720p</option>
-                  <option value="540">540p</option>
-                  <option value="360">360p</option>
-                </select>
-              </div>
-              <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;">
-                <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
-                <button class="btn btn-pause"><span class="fa fa-pause"></span></button>
-                <button class="btn btn-forward"><span class="fa fa-forward"></span></button>
-                <button class="btn btn-stop"><span class="fa fa-stop"></span></button>
-                <button class="btn btn-reset" hidden><span class="fa fa-undo"></span></button>
-                <button class="btn btn-mute"><span class="fa fa-volume-off"></span></button>
-                <button class="btn btn-expand"><span class="fa fa-expand"></span></button>
-              </div>
-          </div>
 
-          <div class="video-name-container">
-            <div style="float: left">
-              <h6>Now Playing&nbsp;&nbsp;{{videoName}}</h6>
-            </div>  
-            <div style="float: right">
-              <h6>Uploaded By&nbsp;&nbsp;{{uploader}}</h6>
-            </div>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+
+<body style="-webkit-backface-visibility: hidden;backface-visibility: hidden;">
+  <app-header (uploadButtonClicked)="stop()" (dialogClosed)="play()"></app-header>
+  <div class="video-playing-container margin-left-10" id="container-display">
+    <div id="videoWidth" class="video-container-1">
+      <div style="overflow: hidden;" id="video-div">
+        <div id="cover-spin"></div>
+        <video class="video-container" controlsList="nodownload" style="margin: -5px -10px -10px -5px;"></video>
+      </div>
+      <div class="video-controls">
+        <div style="background-color: black; margin-left: 1.3%;">
+          <span id="buffered-amount"></span>
+          <span id="progress-bar-fill"></span>
+          <div style="width: 90%;">
+            <span id="default-bar"></span>
+          </div>
+        </div>
+        <p style="float:left;color: white;" class="vertical-center" id="time-bar"></p>
+        <div style="float:right;display: flex" id="speed">
+          <select class="form-control select-style" (change)=changePlayBackSpeed($event) id="speed_select">
+            <option class="background-black">1.0</option>
+            <option class="background-black">1.2</option>
+            <option class="background-black">1.5</option>
+            <option class="background-black">2.0</option>
+          </select>
+        </div>
+        <div style="float:right;display: flex" id="quality">
+          <select class="form-control select-style" (change)=changeQuality($event) id="quality_select">
+            <option value="full" class="background-black">Auto</option>
+            <option value="720" class="background-black">720p</option>
+            <option value="540" class="background-black">540p</option>
+            <option value="360" class="background-black">360p</option>
+          </select>
+        </div>
+        <div style="text-align: center;padding-top: 1%;padding-bottom: 0.8%;margin-left: 50px;">
+          <button class="btn btn-backward"><span class="fa fa-backward"></span></button>
+          <button class="btn btn-pause"><span class="fa fa-pause"></span></button>
+          <button class="btn btn-forward"><span class="fa fa-forward"></span></button>
+          <button class="btn btn-stop"><span class="fa fa-stop"></span></button>
+          <button class="btn btn-reset" hidden><span class="fa fa-undo"></span></button>
+          <button class="btn btn-mute"><span class="fa fa-volume-off"></span></button>
+          <button class="btn btn-expand"><span class="fa fa-expand"></span></button>
+          <button class="btn btn-picture-in-picture"><span class="fa fa-external-link-square" aria-hidden="true"></span></button>
+          <button class="cog-style btn fa fa-cog" (click)="openPlayBackOptionsOnOnMobile()"></button>
+        </div>
+      </div>
+      <mat-accordion id="expansion-panel">
+        <mat-expansion-panel style="transform: translateY(-40px);background-color: #C0C0C0; width: 100%;">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Now Playing</b>&nbsp;&nbsp;{{videoName}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <b>Details</b>
+          <div *ngIf="currentVideo">
+            <ul>
+              <li><b>Uploaded By</b>&nbsp;&nbsp;{{uploader}}</li>
+              <li><b>Description</b>&nbsp;&nbsp;{{currentVideo.description ? currentVideo.description : "NA"}}</li>
+            </ul>
           </div>
           <span *ngIf="showRatingsDiv">
             <div class="star-container">
-                  <app-rating [rating]="ratingValue" (ratingClick)="rating($event)"></app-rating>
-            </div> 
+              <div><b>Video ratings</b></div>
+              <app-rating [rating]="ratingValue" (ratingClick)="rating($event)"></app-rating>
+            </div>
           </span>
+        </mat-expansion-panel>
+      </mat-accordion>
+    <div *ngIf="subscriptions" style="margin-top: 5px;transform: translateY(-10px);">
+      <app-subscription [subscribed]="checkSubscription(uploader)" [videoId]="videoId"></app-subscription>
+    </div>
+      <div>
+        <mat-form-field style="width: 100%;">
+          <input type="text" matInput [(ngModel)]="message" name="message" placeholder="Comment">
+        </mat-form-field>
+        <button (click)="send()" mat-raised-button>Post</button>
+        <div *ngIf="comments && comments.length !== 0" style="margin-top: 20px;margin-bottom: 20px;">
+          <b>Comments</b>
+          <div *ngFor="let comment of comments" style="margin-top:20px;">
+              <div style="display: flex;">
+                <ngx-avatar name="{{comment.userName}}"></ngx-avatar>
+                <span style="margin-left: 10px;">
+                  <span><b>{{comment.userName}}</b></span>
+                  <span style="margin-left: 10px;"><b>{{comment.time}}</b></span>
+                  <div>{{comment.comment}}</div>
+                </span>
+              </div>
+          </div>
         </div>
-      <div id="listing" class="listing-style">
-          <div *ngIf="loggedIn">
-            <app-recommendation></app-recommendation><hr class="seperator">
-          </div>
-          <div *ngIf="videoName">
-            <app-video-listing [filteredVideo]="videoName"></app-video-listing>
-          </div>
+       </div>
+    </div>
+    <div id="listing" class="listing-style">
+      <div *ngIf="loggedIn">
+        <app-recommendation [filteredVideo]="videoName"></app-recommendation>
+        <hr class="seperator">
+      </div>
+      <div *ngIf="videoName">
+        <app-video-listing [filteredVideo]="videoName"></app-video-listing>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>

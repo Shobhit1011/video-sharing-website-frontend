@@ -1,0 +1,19 @@
+<mat-sidenav-container style="background-color: transparent;">
+    <mat-sidenav [opened] = "isExpanded" mode="over" (closed)="navClosed()" class="nav-width">
+      <mat-nav-list (opened)="openedNavBar()" (closed)="closeNavBar()">
+       <span class="float-left" style="margin-top: 10px;margin-left: 1%;">
+          <mat-icon (click)="sideNavChanged()" aria-label="Menu" style="cursor: pointer;">menu</mat-icon>
+          <img src="assets/images/logo.jpg" height="30px" width="30px" style="margin-left: 10px;">
+          <span style="margin-left: 10px;"><b>VideoWeb</b></span>
+        </span>
+        <br><br><br>
+        <a mat-list-item [routerLink]="['/']">
+          <mat-icon aria-hidden="false" aria-label="Home">home</mat-icon>
+          &nbsp;&nbsp;&nbsp;&nbsp;Home
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
