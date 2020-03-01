@@ -18,6 +18,7 @@ if (videoElement) {
     var defaultBar = document.getElementById("default-bar");
     var videoNameContainer = document.getElementById("expansion-panel");
     var timeBar = document.getElementById("time-bar");
+    var bufferedAmount = document.getElementById("buffered-amount");
     var fullScreenFlag = 0;
     var timeout;
     var default_bar_width = 97;
@@ -359,7 +360,7 @@ if (videoElement) {
     videoElement.addEventListener('timeupdate', updateProgress, false);
 
     videoElement.addEventListener('progress', function () {
-        if (videoElement) {
+        if (videoElement && bufferedAmount) {
             var duration = videoElement.duration;
             if (duration > 0) {
                 for (var i = 0; i < videoElement.buffered.length; i++) {
