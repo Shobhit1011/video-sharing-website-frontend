@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { LoginService } from '../login/login-service';
 import { HomeService } from './home.service';
 import { environment } from 'src/environments/environment';
+import { LoaderService } from '../components/shared/loader/loader.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   url = environment.apiUrl+'/image?name=';
   innerWidth = window.innerWidth;
 
-  constructor(private loginService: LoginService, private homeService: HomeService) { }
+  constructor(private loginService: LoginService, private homeService: HomeService, private loaderService: LoaderService) { }
 
   ngOnInit() {
     this.loginService.getSession().subscribe(response=>{
@@ -27,7 +28,9 @@ export class HomeComponent implements OnInit {
         this.userInfo = response;
         this.loggedIn = true;
       }
+      this.loaderService.show();
       this.homeService.getVideoList().subscribe((response)=>{
+        this.loaderService.hide();
         this.videos = response;
       })
     });

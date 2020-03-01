@@ -94,7 +94,6 @@ export class VideoPlayComponent implements OnInit {
   }
 
   settingVariablesAndCss(response, routeParams){
-    this.widthCalculation();
     this.titleService.setTitle(response['video']['videoName'].toUpperCase());
     this.currentVideo = response['video'];
     this.videoName = response['video']['name_in_folder'];
@@ -106,6 +105,7 @@ export class VideoPlayComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.widthCalculation();
     this.loadVideoScript();
     document.getElementById('cover-spin').style.display = "none";
     this.loginService.isLoggedIn.subscribe(() => { });
