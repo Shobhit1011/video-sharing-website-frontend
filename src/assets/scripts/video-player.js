@@ -360,11 +360,12 @@ if (videoElement) {
     videoElement.addEventListener('timeupdate', updateProgress, false);
 
     videoElement.addEventListener('progress', function () {
-        if (videoElement && bufferedAmount) {
+        if (videoElement) {
             var duration = videoElement.duration;
             if (duration > 0) {
                 for (var i = 0; i < videoElement.buffered.length; i++) {
-                    if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime) {
+                    if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime 
+                        && videoElement && bufferedAmount && videoElement.buffered) {
                         document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * default_bar_width + "%";
                         break;
                     }
