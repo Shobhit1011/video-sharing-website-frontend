@@ -30,7 +30,6 @@ import { SignupComponent } from './signup/signup.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { PlaybackOptionsComponent } from './playback-options/playback-options.component';
-import { ScrollableDirective } from './scrollable.directive';
 import { AvatarModule } from 'ngx-avatar';
 import { SideNavComponent } from './components/shared/side-nav/side-nav.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
@@ -50,7 +49,6 @@ import { ConfirmationBoxComponent } from './subscription/confirmation-box/confir
     SignupComponent,
     RecommendationComponent,
     PlaybackOptionsComponent,
-    ScrollableDirective,
     SideNavComponent,
     SubscriptionComponent,
     ConfirmationBoxComponent
