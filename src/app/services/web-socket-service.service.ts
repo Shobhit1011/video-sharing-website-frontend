@@ -3,6 +3,7 @@ import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { AppComponent } from '../app.component';
 import { BehaviorSubject } from 'rxjs';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,9 @@ export class WebSocketService {
     stompClient: any;
     appComponent: AppComponent;
     newComment: BehaviorSubject<Object> = new BehaviorSubject({});
-    
-    constructor(){
+    notifications: BehaviorSubject<Object> = new BehaviorSubject({});
+
+    constructor(private subscriptionService: SubscriptionService){
     }
 
     _connect() {
@@ -26,6 +28,7 @@ export class WebSocketService {
               _this.onMessageReceived(sdkEvent);
           });
           _this.stompClient.reconnect_delay = 2000;
+          _this.getSubscriptions();
       }, this.errorCallBack);
     };
 
@@ -48,5 +51,26 @@ export class WebSocketService {
 
     onMessageReceived(message) {
         this.newComment.next(JSON.parse(message.body));
+    }
+
+    getSubscriptions(){
+        const _this = this;
+        const userId = localStorage.getItem('user_id');
+        if(userId){
+            this.subscriptionService.getUserSubscriptions(userId).subscribe((subscriptions)=>{
+                let topics = subscriptions;
+                _this.buildWebSocketSubscriptions(topics);
+            });
+        }
+    }
+
+    buildWebSocketSubscriptions(topics){
+        const _this = this;
+        console.log(topics)
+        topics.map((topic)=>{
+            _this.stompClient.subscribe(`/${topic}`, function(sdkEvent){
+                _this.notifications.next(JSON.parse(sdkEvent.body));
+            });
+        })
     }
 }

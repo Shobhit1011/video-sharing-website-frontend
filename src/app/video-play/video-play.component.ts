@@ -107,6 +107,7 @@ export class VideoPlayComponent implements OnInit {
 
   ngOnInit() {
     this.loadVideoScript();
+    document.getElementById('cover-spin').style.display = "none";
     this.loginService.isLoggedIn.subscribe(() => { });
 
     // Setting Variables based on route params.
@@ -168,6 +169,7 @@ export class VideoPlayComponent implements OnInit {
 
         // Try to load a manifest.
         // This is an asynchronous process.
+        document.getElementById('cover-spin').style.display = "display";
         this.shaka_player.load(this.manifestUri + '?quality=full').then(() => {
           player.play();
         }).catch(this.onError);
@@ -304,8 +306,12 @@ export class VideoPlayComponent implements OnInit {
     document.getElementById('dropdown-options').style.display = "block";
   }
 
-  send(event) {
-    console.log(event)
-    this.websocketAPI._send(this.message, this.videoId, this.user.id);
+  send() {
+    try{
+      this.websocketAPI._send(this.message, this.videoId, this.user.id);
+      this.message = "";
+    } catch(error){
+      console.log(error);
+    }
   }
 }

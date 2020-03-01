@@ -7,7 +7,8 @@ import { LoaderService } from '../components/shared/loader/loader.service';
 export class LoaderInterceptor implements HttpInterceptor {
     constructor(public loaderService: LoaderService) { }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if(req.url.includes("getAllVideos") || req.url.includes("/videos/count")){
+        if(req.url.includes("getAllVideos") || req.url.includes("/videos/count") 
+        || req.url.includes("/getSubscriptions") || req.url.includes('/recommend') || req.url.includes("/rating") || req.url.includes("videoById") || req.url.includes("auth")){
             req = req.clone({
                 withCredentials: true
             });

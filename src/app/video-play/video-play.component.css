@@ -1,8 +1,8 @@
 :root {
-    --top-y: 0;
-    --top-y-mobile:0;
-    --top-x:0;
-    --top-x-mobile:0;
+    --top-y: 22;
+    --top-y-mobile:15;
+    --top-x:47;
+    --top-x-mobile:42;
 }
 select {
     -webkit-appearance: none;
