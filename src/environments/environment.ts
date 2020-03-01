@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   apiUrl: "http://192.168.1.6:8080/com.dell.flat.hyd",
   emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-  nameRegex: /^[a-zA-Z0-9]{1,20}$/
+  nameRegex: /^[a-zA-Z0-9]{1,20}$/,
+  backendIP: "192.168.1.6"
 };
 
 /*

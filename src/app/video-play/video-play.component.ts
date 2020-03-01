@@ -102,7 +102,7 @@ export class VideoPlayComponent implements OnInit {
     this.url = `${environment.apiUrl}/videoStreaming?filename=${this.videoName}`;
     this.videoId = routeParams.id;
     this.manifestUri = response['video']['manifest_path'];
-    this.manifestUri = this.manifestUri.replace("localhost", "192.168.1.6");
+    this.manifestUri = this.manifestUri.replace("localhost", environment.backendIP);
   }
 
   ngOnInit() {
