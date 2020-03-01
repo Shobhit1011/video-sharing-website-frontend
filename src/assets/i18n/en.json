@@ -1,7 +1,0 @@
-{
-    "LOGIN":{
-        "SUCCESS": "Logged in successfully",
-        "INVALID_CREDENTIALS": "Invalid credentials",
-        "NOT_FOUND":"User not registered with us"
-    }
-}
