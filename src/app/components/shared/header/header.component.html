@@ -34,9 +34,9 @@
                         </button>
                     </mat-menu>
                 </span>
-                <span style="float: right;  margin-top: 15px;" [matBadge]="notificationsCount" matBadgeColor="warn">
+                <!-- <span style="float: right;  margin-top: 15px;" [matBadge]="notificationsCount" matBadgeColor="warn">
                     <span class="material-icons" [matMenuTriggerFor]="notificationsMenu">notifications</span>
-                </span>
+                </span> -->
                 <mat-menu #notificationsMenu="matMenu">
                     <div *ngFor="let notification of notifications">
                         <button mat-menu-item style="outline: none;">
