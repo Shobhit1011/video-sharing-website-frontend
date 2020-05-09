@@ -11,6 +11,7 @@
         </span>
         <span>
             <div *ngIf="!loggedIn">
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
                 <div mat-button class="button-color float-right button-style" style="outline: none;cursor: pointer !important;" (click)="navigate()">
                     <span class="text-color">
                         <b>Login</b>
@@ -18,8 +19,10 @@
                 </div>
             </div>
             <div *ngIf="loggedIn && userInfo">
-                <span class="float-right" style="margin-top: 5px; cursor: pointer !important;">
-                    <ngx-avatar [size]="40" name="{{userInfo.email}}" [matMenuTriggerFor]="menu"></ngx-avatar>
+                <span class="float-right" style="margin-top: 5px; margin-left: 20px; cursor: pointer !important;">
+                    <span>
+                        <ngx-avatar [size]="40" name="{{userInfo.email}}" [matMenuTriggerFor]="menu"></ngx-avatar>
+                    </span>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item style="outline: none;">
                             <mat-icon>face</mat-icon>
@@ -29,8 +32,18 @@
                             <mat-icon>exit_to_app</mat-icon>
                             <label>Logout</label>
                         </button>
-                      </mat-menu>
+                    </mat-menu>
                 </span>
+                <span style="float: right;  margin-top: 15px;" [matBadge]="notificationsCount" matBadgeColor="warn">
+                    <span class="material-icons" [matMenuTriggerFor]="notificationsMenu">notifications</span>
+                </span>
+                <mat-menu #notificationsMenu="matMenu">
+                    <div *ngFor="let notification of notifications">
+                        <button mat-menu-item style="outline: none;">
+                            <label>{{notification.message}}</label>
+                        </button>
+                    </div>
+                </mat-menu>
             </div>
         </span>
     </div>

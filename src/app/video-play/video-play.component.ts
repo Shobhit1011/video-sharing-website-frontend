@@ -58,15 +58,15 @@ export class VideoPlayComponent implements OnInit {
       document.getElementById('listing').style.marginLeft = "0px";
       document.getElementById('listing').style.marginTop = "0%";
       document.getElementById('listing').style.width = "100%";
-      document.getElementById('container-display').style.marginLeft = '0%';
-      document.getElementById('container-display').style.marginRight = '0%';
+      document.getElementById('container-display').style.marginLeft = '2%';
+      document.getElementById('container-display').style.marginRight = '1%';
       document.getElementById('quality').style.display = "none";
       document.getElementById('speed').style.display = "none";
       document.getElementById('listing').style.marginTop = "20px"
 
     }
     else {
-      document.getElementById('videoWidth').style.width = "65%";
+      document.getElementById('videoWidth').style.width = "70%";
       document.getElementById('container-display').style.display = "flex";
       document.getElementById('listing').style.marginLeft = "25px";
       document.getElementById('listing').style.marginTop = "-0.5%";
@@ -200,7 +200,7 @@ export class VideoPlayComponent implements OnInit {
           && !player.paused
         ) {
           document.getElementById('cover-spin').style.display = "block";
-          player.style.webkitFilter = "blur(3px)"
+          player.classList.add('blurring-effect');
           bufferingDetected = true
         }
 
@@ -212,7 +212,7 @@ export class VideoPlayComponent implements OnInit {
           && !player.paused
         ) {
           document.getElementById('cover-spin').style.display = "none";
-          player.style.webkitFilter = "blur(0px)"
+          player.classList.remove('blurring-effect');
           bufferingDetected = false
         }
         lastPlayPos = currentPlayPos

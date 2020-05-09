@@ -1,16 +1,24 @@
-<h6>Coming Up Next</h6>
-<div *ngFor = "let video of recommendedVideos;let i = index">
-    <a class="item-content" [routerLink]="['/video',video.id]">
-        <div style="margin-top: 2px; margin-bottom: 10px;">
-            <div style="display: flex;">
-                <img [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" style="height: 100%;
-                    width: 150px;">
-                <div style="width: 100%;">
-                    <span style="color:black;margin-left: 10px;font-size: 12px;word-break: break-all;"><b>{{ (video.name_in_folder.length > 20) ? (video.name_in_folder | slice:0:20) + '...' : video.name_in_folder }}</b></span>
+<html>
+    <body>
+        <h6>Coming Up Next</h6>
+        <div *ngFor = "let video of recommendedVideos;let i = index">
+            <a class="item-content" [routerLink]="['/video',video.id]">
+                <div style="margin-top: 2px; margin-bottom: 10px;">
+                    <div style="display: flex; height: 100%;">
+                        <div>
+                        <img [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" style="height: 80px;
+                            width: 150px;">
+                        </div>
+                        <div style="color:black;margin-left: 10px;font-size: 12px;">
+                            <span style="word-break: break-all;"><b>{{ (video.name_in_folder.length > 20) ? (video.name_in_folder | slice:0:20) + '...' : video.name_in_folder }}</b></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-    </a>
-</div>
+    </body>
+</html>
+
+
     
 

@@ -68,8 +68,8 @@ if (videoElement) {
             }
             root.style.setProperty('--top-y', 24 + "%");
             root.style.setProperty('--top-x', 48 + "%");
-            root.style.setProperty('--top-y-mobile', 100 + "%");
-            root.style.setProperty('--top-x-mobile', 42 + "%");
+            root.style.setProperty('--top-y-mobile', 80 + "%");
+            root.style.setProperty('--top-x-mobile', 43 + "%");
         }
         else {
             fullScreenFlag = 0;
@@ -216,15 +216,15 @@ if (videoElement) {
     }
 
     function changeHeight() {
-        progressBarFill.style.height = "6px";
-        defaultBar.style.height = "6px";
-        bufferedBar.style.height = "6px";
-    }
-
-    function defaultHeight() {
         progressBarFill.style.height = "4px";
         defaultBar.style.height = "4px";
         bufferedBar.style.height = "4px";
+    }
+
+    function defaultHeight() {
+        progressBarFill.style.height = "3px";
+        defaultBar.style.height = "3px";
+        bufferedBar.style.height = "3px";
     }
 
     function pictureInPicture() {
@@ -275,25 +275,30 @@ if (videoElement) {
     }
 
     function test() {
-        if (videoElement) {
-            if (document && !document.fullScreen && !document.mozFullScreen && !document.webkitIsFullScreen) {
-                clearTimeout(timeout)
-                videoNameContainer.style.display = "block";
-                root.style.setProperty('--top-y', 22 + "%");
-                root.style.setProperty('--top-x', 47 + "%");
-                root.style.setProperty('--top-y-mobile', 15 + "%");
-                root.style.setProperty('--top-x-mobile', 42 + "%");
-                btnFullScreenIcon.classList.remove('fa-compress');
-                btnFullScreenIcon.classList.add('fa-expand');
-                fullScreenFlag = 0;
-                enableControls();
+        try{
+            if (videoElement) {
+                if (document && !document.fullScreen && !document.mozFullScreen && !document.webkitIsFullScreen) {
+                    clearTimeout(timeout)
+                    videoNameContainer.style.display = "block";
+                    root.style.setProperty('--top-y', 22 + "%");
+                    root.style.setProperty('--top-x', 47 + "%");
+                    root.style.setProperty('--top-y-mobile', 15 + "%");
+                    root.style.setProperty('--top-x-mobile', 42 + "%");
+                    btnFullScreenIcon.classList.remove('fa-compress');
+                    btnFullScreenIcon.classList.add('fa-expand');
+                    fullScreenFlag = 0;
+                    enableControls();
+                }
+                else {
+                    root.style.setProperty('--top-y', 24 + "%");
+                    root.style.setProperty('--top-x', 48 + "%");
+                    root.style.setProperty('--top-y-mobile', 80 + "%");
+                    root.style.setProperty('--top-x-mobile', 43 + "%");
+                }
             }
-            else {
-                root.style.setProperty('--top-y', 24 + "%");
-                root.style.setProperty('--top-x', 48 + "%");
-                root.style.setProperty('--top-y-mobile', 100 + "%");
-                root.style.setProperty('--top-x-mobile', 42 + "%");
-            }
+        }
+        catch(error){
+            console.log("Either document not active or video ELement not present");
         }
     }
 
@@ -360,17 +365,21 @@ if (videoElement) {
     videoElement.addEventListener('timeupdate', updateProgress, false);
 
     videoElement.addEventListener('progress', function () {
-        if (videoElement) {
-            var duration = videoElement.duration;
-            if (duration > 0) {
-                for (var i = 0; i < videoElement.buffered.length; i++) {
-                    if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime 
-                        && videoElement && bufferedAmount && videoElement.buffered) {
-                        document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * default_bar_width + "%";
-                        break;
+        try{
+            if (videoElement) {
+                var duration = videoElement.duration;
+                if (duration > 0) {
+                    for (var i = 0; i < videoElement.buffered.length; i++) {
+                        if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime 
+                            && videoElement && bufferedAmount && videoElement.buffered) {
+                            document.getElementById("buffered-amount").style.width = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / duration) * default_bar_width + "%";
+                            break;
+                        }
                     }
                 }
             }
+        } catch(error){
+            console.log("Either document not active or video element missing");
         }
     });
 }

@@ -28,7 +28,8 @@ export class SubscriptionComponent implements OnInit {
     if(!self.subscribed){
       const dialogRef = self.dialog.open(ConfirmationBoxComponent,{
         width: '300px',
-        data:{ videoId: self.videoId}
+        data:{ videoId: self.videoId},
+        autoFocus: false
       });
       dialogRef.componentInstance.subscriptionDone.subscribe(()=>{
         self.changeText()

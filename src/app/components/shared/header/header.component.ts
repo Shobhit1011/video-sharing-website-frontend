@@ -7,6 +7,8 @@ import { LogoutService } from 'src/app/services/logout-service';
 import { ToastrService } from 'ngx-toastr';
 import { environment} from 'src/environments/environment';
 import { SidenavService } from 'src/app/services/sidenav.service';
+import { WebSocketService } from 'src/app/services/web-socket-service.service';
+import { HeaderService } from './header.service';
 
 @Component({
   selector: 'app-header',
@@ -21,27 +23,45 @@ export class HeaderComponent implements OnInit {
   @Output() private dialogClosed = new EventEmitter();
 
   opened:Boolean = false;
+  count:number = 0;
+  notificationsCount = 0;
+  notifications = [];
 
   constructor(public dialog: MatDialog, 
     private router:Router, 
     private loginService: LoginService, 
     private logoutService: LogoutService,
     private toastr: ToastrService,
-    private sideNavService: SidenavService) { }
+    private sideNavService: SidenavService,
+    private websocketService: WebSocketService,
+    private headerService: HeaderService) { }
 
   ngOnInit() {
-   this.sideNavService.isExpanded.subscribe((value)=>{
-     this.opened = value;
+   const self = this;
+   self.sideNavService.isExpanded.subscribe((value)=>{
+     self.opened = value;
    })
-   this.loginService.getSession().subscribe(response=>{
+   self.loginService.getSession().subscribe(response=>{
       if(response['session'] && response['session'] === "false"){
-        this.loggedIn = false;
-        this.loginService.changeStatus(false);
+        self.loggedIn = false;
+        self.loginService.changeStatus(false);
       }
       else{
-        this.userInfo = response;
-        this.loggedIn = true;
-        this.loginService.changeStatus(true);
+        self.userInfo = response;
+        self.loggedIn = true;
+        self.loginService.changeStatus(true);
+        self.headerService.getNotifications().subscribe((data: Array<Object>)=>{
+          const unread_notifications = data.map((element) => element['status'] === "unread");
+          self.notifications = data;
+          const number_of_unread_notifications = unread_notifications.length;
+          self.websocketService.setNotificationsCount(number_of_unread_notifications);
+        });
+        self.websocketService.notificationsCount.subscribe((data)=>{
+            self.notificationsCount = data;
+        });
+        self.websocketService.notifications.subscribe((newNotification)=>{
+            self.notifications.unshift(newNotification);
+        });
       }
     });
   }
@@ -66,7 +86,7 @@ export class HeaderComponent implements OnInit {
 
   logout(){
     this.logoutService.logout().subscribe(()=>{
-      this.router.navigate(['/']);
+      window.location.href = environment.baseUrl;
       this.toastr.success('Logged out Successfully');
     })
   }

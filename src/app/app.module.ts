@@ -10,7 +10,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatListModule, MatCardModule, MAT_DIALOG_DEFAULT_OPTIONS, MatMenuModule, MatDrawer, MatDrawerContainer, MatSidenavModule} from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatListModule, MatCardModule, MAT_DIALOG_DEFAULT_OPTIONS, MatMenuModule, MatDrawer, MatDrawerContainer, MatSidenavModule, MatBadgeModule} from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -80,7 +80,8 @@ import { ConfirmationBoxComponent } from './subscription/confirmation-box/confir
     AvatarModule,
     MatMenuModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatBadgeModule
   ],
   providers: [
     LoaderService,

@@ -4,20 +4,30 @@ import * as SockJS from 'sockjs-client';
 import { AppComponent } from '../app.component';
 import { BehaviorSubject } from 'rxjs';
 import { SubscriptionService } from '../subscription/subscription.service';
+import { LoginService } from '../login/login-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
-    webSocketEndPoint: string = 'http://192.168.1.6:8080/com.dell.flat.hyd/socket';
-    topic: string = "/chat";
+    webSocketEndPoint: string = `http://${environment.backendIP}:8080/com.dell.flat.hyd/socket`;
+    topic: string = "/topic/chat";
     stompClient: any;
     appComponent: AppComponent;
     newComment: BehaviorSubject<Object> = new BehaviorSubject({});
     notifications: BehaviorSubject<Object> = new BehaviorSubject({});
+    notificationsCount: BehaviorSubject<number> = new BehaviorSubject(0);
+    subscriptionCreated: Boolean = false;
+    count:number = 0;
 
-    constructor(private subscriptionService: SubscriptionService){
+    constructor(private subscriptionService: SubscriptionService, private loginService: LoginService){
     }
+
+    setNotificationsCount(value){
+        this.count = value;
+        this.notificationsCount.next(value);
+    };
 
     _connect() {
       let ws = new SockJS(this.webSocketEndPoint);
@@ -28,7 +38,11 @@ export class WebSocketService {
               _this.onMessageReceived(sdkEvent);
           });
           _this.stompClient.reconnect_delay = 2000;
-          _this.getSubscriptions();
+          _this.loginService.isLoggedIn.subscribe((isLoggedIn)=>{
+              if(isLoggedIn && isLoggedIn === true){
+                    _this.getSubscriptions();
+              }
+          });
       }, this.errorCallBack);
     };
 
@@ -56,7 +70,7 @@ export class WebSocketService {
     getSubscriptions(){
         const _this = this;
         const userId = localStorage.getItem('user_id');
-        if(userId){
+        if(userId && !this.subscriptionCreated){
             this.subscriptionService.getUserSubscriptions(userId).subscribe((subscriptions)=>{
                 let topics = subscriptions;
                 _this.buildWebSocketSubscriptions(topics);
@@ -66,10 +80,11 @@ export class WebSocketService {
 
     buildWebSocketSubscriptions(topics){
         const _this = this;
-        console.log(topics)
+        this.subscriptionCreated = true;
         topics.map((topic)=>{
-            _this.stompClient.subscribe(`/${topic}`, function(sdkEvent){
+            _this.stompClient.subscribe(`/topic/${topic}`, function(sdkEvent){
                 _this.notifications.next(JSON.parse(sdkEvent.body));
+                _this.setNotificationsCount(_this.count + 1);
             });
         })
     }
