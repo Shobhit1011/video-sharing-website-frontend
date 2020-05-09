@@ -1,0 +1,32 @@
+<html>
+    <body>
+        <h6 mat-dialog-title>PlayBack Options</h6>
+        <form [formGroup]="form" (ngSubmit)="submitForm()">
+            <div>
+                <mat-form-field>
+                    <mat-label>Speed</mat-label>
+                        <mat-select [formControl]= "speedInput">
+                            <mat-option value="1.0">1</mat-option>
+                            <mat-option value="1.2">1.2</mat-option>
+                            <mat-option value="1.5">1.5</mat-option>
+                            <mat-option value="2.0">2</mat-option>
+                        </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <mat-label>Quality</mat-label>
+                        <mat-select [formControl]="qualityInput">
+                            <mat-option value="full">Auto</mat-option>
+                            <mat-option value="720">720p</mat-option>
+                            <mat-option value="540">540p</mat-option>
+                            <mat-option value="360">360p</mat-option>
+                        </mat-select>
+                </mat-form-field>
+            </div>
+            <button mat-raised-button class="button-color" [disabled]="!form.valid">
+                 OK
+            </button>
+        </form> 
+    </body>
+</html>

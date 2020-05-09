@@ -7,12 +7,20 @@ import { LoaderService } from '../components/shared/loader/loader.service';
 export class LoaderInterceptor implements HttpInterceptor {
     constructor(public loaderService: LoaderService) { }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.loaderService.show();
-        req = req.clone({
-            withCredentials: true
-        });
-        return next.handle(req).pipe(
-            finalize(() => this.loaderService.hide())
-        );
+        if(req.url.includes("getAllVideos") || req.url.includes("/videos/count")){
+            req = req.clone({
+                withCredentials: true
+            });
+            return next.handle(req);
+        }
+        else{
+            this.loaderService.show();
+            req = req.clone({
+                withCredentials: true
+            });
+            return next.handle(req).pipe(
+                finalize(() => this.loaderService.hide())
+            );
+        }
     }
 }

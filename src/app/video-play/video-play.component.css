@@ -1,14 +1,47 @@
+:root {
+    --top-y: 22;
+    --top-y-mobile:15;
+    --top-x:47;
+    --top-x-mobile:42;
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: .5em;
+    background: #efefef;
+    border: none;
+    border-radius: 3px;
+    padding: 1em 2em 1em 1em;
+    font-size: 1em;
+}
+.select-container {position:relative; display: inline;}
+.select-container:after {content:""; width:0; height:0; position:absolute; pointer-events: none;}
+.select-container:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    top: .3em;
+    right: .75em;
+    border-top: 8px solid black;
+    opacity: 0.5;
+}
+select::-ms-expand {
+    display: none;
+}
+
 .video-container{
     height: 70%;
     width: 100%;
     position: relative;
     overflow: hidden;
+    background-color: black;
 }
 .video-container-1{
     height: 70%;
     width: 100%;
     position: relative;
     overflow: hidden;
+    z-index: 0;
 }
 video {
     display: block;
@@ -29,8 +62,8 @@ video {
 .video-playing-container{
     display: flex;
     padding-top: 80px;
-    margin-right: 2%;
-    margin-left: 2%;
+    margin-right: 5%;
+    margin-left: 0%;
 }
 .video-name-container{
     background-color: #C0C0C0;
@@ -61,6 +94,16 @@ video {
     margin-top: 0.25%;
 }
 
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-40%);
+    transform: translateY(-40%);
+    margin-right: 5px;
+    margin-left: 1.5%;
+  }
+
 .btn {
     padding: 5px 0;
     width: 31px;
@@ -75,17 +118,17 @@ video {
 }
 .video-controls{
     padding-top: 5px;
-    background: black;
+    background: transparent;
     z-index: 2147483647;
     bottom:-50px;
-    transform: translateY(-90%);
+    transform: translateY(-100%);
     transition: bottom .25s ease-in;
 }
 
 #progress-bar-fill {
     width: 0;
     height: 4px;
-    background-color: red;
+    background-color:#f00;
     transition: width .35s linear;
     position: absolute;
     z-index: 2;
@@ -103,8 +146,8 @@ video {
  }
 
  #default-bar{
-     width: 100%;
-     background-color: #50514D;
+     width: 97%;
+     background-color: rgba(255,255,255,.2);
      position: absolute;
      height: 4px;
      z-index: 1;
@@ -132,11 +175,103 @@ hr.seperator {
     border-color: black;
 }
 
+.background-black{
+    background-color: black;
+}
+
 .select-style{
-    margin-top: 5px;
-    height: 31px;
-    background: black;
+    margin-top: 0px;
+    height: 53px;
+    background:transparent;
     color: white;
     border: none;
     cursor: pointer;
+}
+
+video.loading {
+    background:black;
+}
+
+.image-style{
+    height:50px;
+    width:50px;
+    z-index: 2;
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#cover-spin {
+    position: absolute;
+    height: 70%;
+    width: 100%;
+    left:0;right:0;top:0;bottom:0;
+    z-index:9999;
+    display: block;
+}
+
+@-webkit-keyframes spin {
+	from {-webkit-transform:rotate(0deg);}
+	to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+    content:'';
+    display:block;
+    width:40px;
+    height:40px;
+    border-style:solid;
+    border-color:white;
+    border-top-color:transparent;
+    border-width: 4px;
+    border-radius:50%;
+    -webkit-animation: spin .8s linear infinite;
+    -o-animation:spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+    margin-top: var(--top-y);
+    margin-left: var(--top-x);
+}
+
+.cog-style{
+    display: none;
+}
+
+@media only screen and (max-width: 600px){
+    #cover-spin::after {
+        content:'';
+        display:block;
+        position:absolute;
+        width:50px;
+        height:50px;
+        border-style:solid;
+        border-color:white;
+        border-top-color:transparent;
+        border-width: 4px;
+        border-radius:50%;
+        -webkit-animation: spin .8s linear infinite;
+        -o-animation:spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+        margin-top: var(--top-y-mobile);
+        margin-left: var(--top-x-mobile);
+    }
+}
+
+@media only screen and (max-width: 1024px){
+    .cog-style{
+        display: inline-flex;
+        padding-left: 5px;
+    }
+}
+
+.blurring-effect{
+    -webkit-filter: blur(3px);
+    filter: blur(3px);
+    -moz-filter: blur(3px);
+    -ms-filter: blur(3px);
 }

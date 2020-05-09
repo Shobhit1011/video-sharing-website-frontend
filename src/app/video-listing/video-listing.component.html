@@ -2,13 +2,24 @@
     <body>
         <div *ngFor = "let video of videos;let i = index">
             <a class="item-content" [routerLink]="['/video',video.id]">
-                <mat-card class="card-container">
-                    <img mat-card-image [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" class="card-image-container card-image-container-edge">
-                    <mat-card-content class="content-container">
-                        <p class="break-word">{{video.name_in_folder}}</p>
-                    </mat-card-content>
-                </mat-card>
+                <div style="margin-top: 2px; margin-bottom: 10px;">
+                    <div style="display: flex; height: 100%;">
+                        <div>
+                        <img [src]="getUrl(video.name_in_folder)" [alt]="video.name_in_folder" style="height: 80px;
+                            width: 150px;">
+                        </div>
+                        <div style="color:black;margin-left: 10px;font-size: 12px;">
+                            <span style="word-break: break-all;"><b>{{ (video.name_in_folder.length > 20) ? (video.name_in_folder | slice:0:20) + '...' : video.name_in_folder }}</b></span>
+                        </div>
+                    </div>
+                </div>
             </a>
+        </div>
+        <div *ngIf="showLoaderImage" style="text-align: center; margin-top: 20px;margin-bottom: 10px;cursor: pointer;" (click)="loadMore(i)">
+            <img src="../../assets//images/load_more.gif">
+        </div>
+        <div *ngIf="showLoadMore && !showLoaderImage" style="text-align: center; margin-top: 10px;margin-bottom: 10px;cursor: pointer;" (click)="loadMore(i)">
+            Load More
         </div>
     </body>
 </html>

@@ -18,7 +18,6 @@ export class SignupService {
     delete formValue.confirm_password;
     delete formValue.Email;
     delete formValue.Password;
-
     return this.http.post(`${environment.apiUrl}/register`, formValue);
   }
 }

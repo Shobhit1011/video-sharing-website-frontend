@@ -10,7 +10,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatListModule, MatCardModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatListModule, MatCardModule, MAT_DIALOG_DEFAULT_OPTIONS, MatMenuModule, MatDrawer, MatDrawerContainer, MatSidenavModule, MatBadgeModule} from '@angular/material';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatVideoModule } from 'mat-video';
@@ -27,7 +28,12 @@ import { HeaderComponent } from './components/shared/header/header.component';
 import { RatingComponent } from './components/shared/rating/rating.component';
 import { SignupComponent } from './signup/signup.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { PlaybackOptionsComponent } from './playback-options/playback-options.component';
+import { AvatarModule } from 'ngx-avatar';
+import { SideNavComponent } from './components/shared/side-nav/side-nav.component';
+import { SubscriptionComponent } from './subscription/subscription.component';
+import { ConfirmationBoxComponent } from './subscription/confirmation-box/confirmation-box.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +47,11 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
     HeaderComponent,
     RatingComponent,
     SignupComponent,
-    RecommendationComponent
+    RecommendationComponent,
+    PlaybackOptionsComponent,
+    SideNavComponent,
+    SubscriptionComponent,
+    ConfirmationBoxComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +74,14 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
     MatDialogModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgbModule,
+    MatExpansionModule,
+    AvatarModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatListModule,
+    MatBadgeModule
   ],
   providers: [
     LoaderService,
@@ -72,7 +89,9 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    FileUploadComponent
+    FileUploadComponent,
+    PlaybackOptionsComponent,
+    ConfirmationBoxComponent
   ]
 })
 export class AppModule { }

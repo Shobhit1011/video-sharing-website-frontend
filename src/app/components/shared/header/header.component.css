@@ -2,14 +2,14 @@
     height: 50px;
     position: fixed;
     width: 100%;
-    z-index: 4;
-    background-color: #C0C0C0;
+    z-index: 9999999999;
+    background-color: #ECECEC;
 }
 .button-color{
-    background-color: black;
+    background-color: transparent;
 }
 .text-color{
-    color: white;
+    color: black;
 }
 .float-left{
     float: left;
@@ -18,7 +18,32 @@
     float: right;
 }
 .button-style{
-    width: 8%;
+    width: 5%;
     margin-right: 2%;
-    margin-top: 0.25%;
+    margin-top: 16px;
+    border: none;
 }
+.toolbar-filler {
+    flex: 1 1 auto
+}
+
+a.fa-globe {
+    position: relative;
+    font-size: 2em;
+    color: grey;
+    cursor: pointer;
+  }
+  span.fa-comment {
+    position: absolute;
+    font-size: 0.6em;
+    top: -4px;
+    color: red;
+    right: -4px;
+  }
+  span.num {
+    position: absolute;
+    font-size: 0.3em;
+    top: 1px;
+    color: #fff;
+    right: 2px;
+  }

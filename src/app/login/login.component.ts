@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.loginService.login(this.form.value.username, this.form.value.password).subscribe((response)=>{
+      localStorage.setItem('user_id', response['id']);
       this.toastr.success('Logged in Successfully');
       this.router.navigate(['/']);
     },(error)=>{

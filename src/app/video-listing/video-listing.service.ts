@@ -10,11 +10,14 @@ export class VideoListingService {
 
   constructor(private http: HttpClient) { }
 
-  getVideoList(){
-    return this.http.get(`${environment.apiUrl}/getAllVideos`);
+  getVideoList(skip, limit){
+    return this.http.get(`${environment.apiUrl}/getAllVideos?skip=${skip}&limit=${limit}`);
   }
 
   getUser(id){
     return this.http.get(`${environment.apiUrl}/users/${id}`);
+  }
+  getVideosCount(){
+    return this.http.get(`${environment.apiUrl}/videos/count`)
   }
 }
