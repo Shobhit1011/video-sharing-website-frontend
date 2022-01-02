@@ -23,7 +23,6 @@ import { MatDrawer, MatDrawerContainer, MatSidenavModule } from '@angular/materi
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatVideoModule } from 'mat-video';
 import { LoginComponent } from './login/login.component';
 import { ToastrModule } from 'ngx-toastr';
 import { FileUploadComponent } from './file-upload/file-upload.component';
@@ -76,7 +75,6 @@ import { ConfirmationBoxComponent } from './subscription/confirmation-box/confir
     MatSelectModule,
     MatButtonModule,
     MatListModule,
-    MatVideoModule,
     ReactiveFormsModule,
     MatCardModule,
     ToastrModule.forRoot(),
