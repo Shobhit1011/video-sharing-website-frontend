@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter} from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { FileUploadComponent } from 'src/app/file-upload/file-upload.component';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/login/login-service';

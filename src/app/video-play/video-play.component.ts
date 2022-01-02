@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener} from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { RatingService } from './rating.service';
 import { ToastrService } from 'ngx-toastr';
