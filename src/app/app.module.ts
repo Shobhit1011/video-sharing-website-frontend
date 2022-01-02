@@ -44,61 +44,56 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { ConfirmationBoxComponent } from './subscription/confirmation-box/confirmation-box.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    VideoListingComponent,
-    VideoPlayComponent,
-    LoginComponent,
-    FileUploadComponent,
-    LoaderComponent,
-    HomeComponent,
-    HeaderComponent,
-    RatingComponent,
-    SignupComponent,
-    RecommendationComponent,
-    PlaybackOptionsComponent,
-    SideNavComponent,
-    SubscriptionComponent,
-    ConfirmationBoxComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BsDropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
-    BrowserAnimationsModule,
-    FormsModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatListModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    ToastrModule.forRoot(),
-    MatDialogModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    FlexLayoutModule,
-    NgbModule,
-    MatExpansionModule,
-    AvatarModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatBadgeModule
-  ],
-  providers: [
-    LoaderService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    FileUploadComponent,
-    PlaybackOptionsComponent,
-    ConfirmationBoxComponent
-  ]
+    declarations: [
+        AppComponent,
+        VideoListingComponent,
+        VideoPlayComponent,
+        LoginComponent,
+        FileUploadComponent,
+        LoaderComponent,
+        HomeComponent,
+        HeaderComponent,
+        RatingComponent,
+        SignupComponent,
+        RecommendationComponent,
+        PlaybackOptionsComponent,
+        SideNavComponent,
+        SubscriptionComponent,
+        ConfirmationBoxComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BsDropdownModule.forRoot(),
+        TooltipModule.forRoot(),
+        ModalModule.forRoot(),
+        BrowserAnimationsModule,
+        FormsModule,
+        MatInputModule,
+        MatIconModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatListModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        ToastrModule.forRoot(),
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        FlexLayoutModule,
+        NgbModule,
+        MatExpansionModule,
+        AvatarModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatListModule,
+        MatBadgeModule
+    ],
+    providers: [
+        LoaderService,
+        { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
