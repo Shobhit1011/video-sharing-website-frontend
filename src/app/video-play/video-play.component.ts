@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener} from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { RatingService } from './rating.service';
 import { ToastrService } from 'ngx-toastr';
@@ -43,7 +43,7 @@ export class VideoPlayComponent implements OnInit {
     private elRef: ElementRef, public dialog: MatDialog, private http: HttpClient, private router: Router, 
     private ratingService: RatingService, private loginService: LoginService, private toastr: ToastrService, 
     private titleService: Title, private websocketAPI: WebSocketService, private subscriptionService: SubscriptionService) {
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  
   }
 
   @HostListener('window:resize', ['$event'])
@@ -105,6 +105,7 @@ export class VideoPlayComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Insidr ittititti")
     this.widthCalculation();
     this.loadVideoScript();
     document.getElementById('cover-spin').style.display = "none";

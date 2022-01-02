@@ -10,11 +10,19 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatListModule, MatCardModule, MAT_DIALOG_DEFAULT_OPTIONS, MatMenuModule, MatDrawer, MatDrawerContainer, MatSidenavModule, MatBadgeModule} from '@angular/material';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDrawer, MatDrawerContainer, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatVideoModule } from 'mat-video';
 import { LoginComponent } from './login/login.component';
 import { ToastrModule } from 'ngx-toastr';
 import { FileUploadComponent } from './file-upload/file-upload.component';
@@ -36,62 +44,56 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { ConfirmationBoxComponent } from './subscription/confirmation-box/confirmation-box.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    VideoListingComponent,
-    VideoPlayComponent,
-    LoginComponent,
-    FileUploadComponent,
-    LoaderComponent,
-    HomeComponent,
-    HeaderComponent,
-    RatingComponent,
-    SignupComponent,
-    RecommendationComponent,
-    PlaybackOptionsComponent,
-    SideNavComponent,
-    SubscriptionComponent,
-    ConfirmationBoxComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BsDropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
-    BrowserAnimationsModule,
-    FormsModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatListModule,
-    MatVideoModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    ToastrModule.forRoot(),
-    MatDialogModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    FlexLayoutModule,
-    NgbModule,
-    MatExpansionModule,
-    AvatarModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatBadgeModule
-  ],
-  providers: [
-    LoaderService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    FileUploadComponent,
-    PlaybackOptionsComponent,
-    ConfirmationBoxComponent
-  ]
+    declarations: [
+        AppComponent,
+        VideoListingComponent,
+        VideoPlayComponent,
+        LoginComponent,
+        FileUploadComponent,
+        LoaderComponent,
+        HomeComponent,
+        HeaderComponent,
+        RatingComponent,
+        SignupComponent,
+        RecommendationComponent,
+        PlaybackOptionsComponent,
+        SideNavComponent,
+        SubscriptionComponent,
+        ConfirmationBoxComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BsDropdownModule.forRoot(),
+        TooltipModule.forRoot(),
+        ModalModule.forRoot(),
+        BrowserAnimationsModule,
+        FormsModule,
+        MatInputModule,
+        MatIconModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatListModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        ToastrModule.forRoot(),
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        FlexLayoutModule,
+        NgbModule,
+        MatExpansionModule,
+        AvatarModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatListModule,
+        MatBadgeModule
+    ],
+    providers: [
+        LoaderService,
+        { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

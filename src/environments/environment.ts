@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://192.168.1.6:8080/com.dell.flat.hyd",
+  apiUrl: "http://localhost:8080/com.dell.flat.hyd",
   emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   nameRegex: /^[a-zA-Z0-9]{1,20}$/,
-  backendIP: "192.168.1.6",
+  backendIP: "localhost",
   baseUrl: "http://localhost:4200"
 };
 
@@ -18,4 +18,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

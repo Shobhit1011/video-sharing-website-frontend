@@ -1,49 +1,49 @@
-.fixed-bar{
-    height: 50px;
-    position: fixed;
-    width: 100%;
-    z-index: 9999999999;
-    background-color: #ECECEC;
+.fixed-bar {
+  height: 50px;
+  position: fixed;
+  width: 100%;
+  z-index: 9999999999;
+  background-color: #ececec;
 }
-.button-color{
-    background-color: transparent;
+.button-color {
+  background-color: transparent;
 }
-.text-color{
-    color: black;
+.text-color {
+  color: black;
 }
-.float-left{
-    float: left;
+.float-left {
+  float: left;
 }
-.float-right{
-    float: right;
+.float-right {
+  float: right;
 }
-.button-style{
-    width: 5%;
-    margin-right: 2%;
-    margin-top: 16px;
-    border: none;
+.button-style {
+  width: 5%;
+  margin-right: 2%;
+  margin-top: 16px;
+  border: none;
 }
 .toolbar-filler {
-    flex: 1 1 auto
+  flex: 1 1 auto;
 }
 
 a.fa-globe {
-    position: relative;
-    font-size: 2em;
-    color: grey;
-    cursor: pointer;
-  }
-  span.fa-comment {
-    position: absolute;
-    font-size: 0.6em;
-    top: -4px;
-    color: red;
-    right: -4px;
-  }
-  span.num {
-    position: absolute;
-    font-size: 0.3em;
-    top: 1px;
-    color: #fff;
-    right: 2px;
-  }
+  position: relative;
+  font-size: 2em;
+  color: grey;
+  cursor: pointer;
+}
+span.fa-comment {
+  position: absolute;
+  font-size: 0.6em;
+  top: -4px;
+  color: red;
+  right: -4px;
+}
+span.num {
+  position: absolute;
+  font-size: 0.3em;
+  top: 1px;
+  color: #fff;
+  right: 2px;
+}
